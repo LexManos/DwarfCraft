@@ -4,10 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.io.FileOutputStream;
 import org.bukkit.Material;
+import org.jbls.LexManos.CSV.CSVReader;
+import org.jbls.LexManos.CSV.CSVRecord;
 
 final class ConfigManager {
 
@@ -21,7 +28,7 @@ final class ConfigManager {
 	private String configEffectsFileName;
 	private int configEffectsVersion;
 	private String configMessagesFileName;
-	private String configGreeterMessagesFileName;
+	private String cfgGreeterFile;
 	private String dbpath;
 	
 	private HashMap<Race, HashMap<Integer, Skill>> skillsArray = new HashMap<Race,HashMap<Integer, Skill>>();
@@ -36,6 +43,7 @@ final class ConfigManager {
 			directory += File.separator;
 		configDirectory = directory;
 		configMainFileName = paramsFileName;
+		checkFiles(configDirectory);
 
 		try{
 		if (!readConfigFile() || !readSkillsFile() || !readEffectsFile() || !readMessagesFile()) {
@@ -85,19 +93,63 @@ final class ConfigManager {
 	}
 
 	protected String getDbPath() {
-		return dbpath;
+		return configDirectory + dbpath;
 	}
 
 	private void getDefaultValues() {
-		if (configSkillsVersion == 0)              configSkillsVersion    = 100;
-		if (configEffectsVersion == 0)             configEffectsVersion   = 100;
-		if (configSkillsFileName == null)          configSkillsFileName   = "skills.config";
-		if (configEffectsFileName == null)         configEffectsFileName  = "effects.config";
-		if (configMessagesFileName == null)        configMessagesFileName = "messages.config";
-		if (configGreeterMessagesFileName == null) configGreeterMessagesFileName = "greeters.config";
-		if (dbpath == null)                        dbpath = "dwarfcraft.db";
+		if (configSkillsVersion == 0)       configSkillsVersion    = 100;
+		if (configEffectsVersion == 0)      configEffectsVersion   = 100;
+		if (configSkillsFileName == null)   configSkillsFileName   = "skills.csv";
+		if (configEffectsFileName == null)  configEffectsFileName  = "effects.csv";
+		if (configMessagesFileName == null) configMessagesFileName = "messages.config";
+		if (cfgGreeterFile == null)         cfgGreeterFile = "greeters.config";
+		if (dbpath == null)                 dbpath = "dwarfcraft.db";
 	}
+	private void checkFiles(String path){
+		File root = new File(path);
+		if (!root.exists())
+			root.mkdirs();
+		try{
+			File file = new File(root, "DwarfCraft.config");
+			if (!file.exists()){
+				file.createNewFile();
+				CopyFile("/default_files/DwarfCraft.config", file);
+			}
+			
+			readConfigFile();
+			getDefaultValues();
+			
+			String[][] mfiles = { {configSkillsFileName,   "skills.csv"},
+					              {configEffectsFileName,  "effects.csv"},
+					              {configMessagesFileName, "messages.config"},
+					              {dbpath,                 "dwarfcraft.db" },
+					              {cfgGreeterFile,         "greeters.config"}
+								};
+			for(String[] mfile : mfiles){
+				file = new File(root, mfile[0]);
+				if (!file.exists()){
+					file.createNewFile();
+					CopyFile("/default_files/" + mfile[1], file);
+				}
+			}
+		}catch(Exception e){
+			System.out.println("DC: ERROR: Could not verify files: " + e.toString());
+			e.printStackTrace();
+		}
+	}
+	private void CopyFile(String name, File toFile) throws Exception{
+		InputStream ins = ConfigManager.class.getResourceAsStream(name);
+		OutputStream out = new FileOutputStream(toFile);
 
+	      byte[] buf = new byte[1024];
+	      int len;
+	      while ((len = ins.read(buf)) > 0){
+	        out.write(buf, 0, len);
+	      }
+	      out.flush();
+	      ins.close();
+	      out.close();
+	}
 	private boolean readConfigFile() {
 		try {
 			System.out.println("DC Init: Reading Config File: " + configDirectory + configMainFileName);
@@ -126,9 +178,9 @@ final class ConfigManager {
 				if (theline[0].equalsIgnoreCase("Messages File Name"))
 					configMessagesFileName = theline[1].trim();
 				if (theline[0].equalsIgnoreCase("Greeter Messages File Name"))
-					configGreeterMessagesFileName = theline[1].trim();
+					cfgGreeterFile = theline[1].trim();
 				if (theline[0].equalsIgnoreCase("Database File Name"))
-					dbpath = configDirectory + theline[1].trim();
+					dbpath = theline[1].trim();
 				if (theline[0].equalsIgnoreCase("Debug Level"))
 					DwarfCraft.debugMessagesThreshold = Integer.parseInt(theline[1].trim());
 				/*if (theline[0].equalsIgnoreCase("Default Race")){
@@ -154,69 +206,46 @@ final class ConfigManager {
 
 	private boolean readEffectsFile() {
 		System.out.println("DC Init: Reading effects file: " + configDirectory + configEffectsFileName);
-		String line = "";
 		try {
-			FileReader fr = new FileReader(configDirectory + configEffectsFileName);
-			BufferedReader br = new BufferedReader(fr);
-			line = br.readLine();
-			while (line != null) {
-				if (line.length() == 0) {
-					line = br.readLine();
-					continue;
+			CSVReader csv = new CSVReader(configDirectory + configEffectsFileName);
+			Iterator<CSVRecord> records = csv.getRecords();
+			while(records.hasNext()){
+				CSVRecord item = records.next();
+				
+				int[] itools;
+				if (item.getString("Tools").isEmpty())
+					itools = new int[0];
+				else{
+					String[] stools = item.getString("Tools").split(" ");
+					itools = new int[stools.length];
+					for(int x = 0; x < stools.length; x++)
+						itools[x] = Integer.parseInt(stools[x]);
 				}
-				if (line.charAt(0) == '#') {
-					line = br.readLine();
-					continue;
-				}
-				if (line.charAt(0) == '^') {
-					configEffectsVersion = Integer.parseInt(line.substring(2));
-					line = br.readLine();
-					continue;
-				}
-				String[] theline = line.split(",");
-				if (theline.length < 20) {
-					line = br.readLine();
-					continue;
-				}
-
-				int idx = 0;
-				int     effectId          = Integer.parseInt(theline[idx++]);
-				double  baseValue         = Double.parseDouble(theline[idx++]);
-				double  levelUpMultiplier = Double.parseDouble(theline[idx++]);
-				double  noviceLevelUpMultiplier = Double.parseDouble(theline[idx++]);
-				double  minValue          = Double.parseDouble(theline[idx++]);
-				double  maxValue          = Double.parseDouble(theline[idx++]);
-				boolean hasException      = (theline[idx++].equalsIgnoreCase("TRUE"));
-				idx++;
-				int     exceptionLow      = Integer.parseInt(theline[idx++]);
-				int     exceptionHigh     = Integer.parseInt(theline[idx++]);
-				double  exceptionValue    = Double.parseDouble(theline[idx++]);
-				int     elfLevel          = Integer.parseInt(theline[idx++]);
-				EffectType effectType     = EffectType.getEffectType(theline[idx++]);
-				int     initiator         = Integer.parseInt(theline[idx++]);
-				int     output            = Integer.parseInt(theline[idx++]);
-				boolean toolRequired      = (theline[idx++].equalsIgnoreCase("TRUE"));
-
-				int[] tooltable = { Integer.parseInt(theline[idx++]),
-						            Integer.parseInt(theline[idx++]),
-						            Integer.parseInt(theline[idx++]),
-						            Integer.parseInt(theline[idx++]),
-						            Integer.parseInt(theline[idx++]) 
-					              };
+				
+				Effect effect = new Effect(
+						item.getInt("ID"), 
+						item.getDouble("BaseValue"),
+						item.getDouble("LevelIncrease"), 
+						item.getDouble("LevelIncreaseNovice"),
+						item.getDouble("Min"), 
+						item.getDouble("Max"), 
+						item.getBool("Exception"), 
+						item.getInt("ExceptionLow"), 
+						item.getInt("ExceptionHigh"),
+						item.getDouble("ExceptionValue"),
+						item.getInt("NormalLevel"),
+						EffectType.getEffectType(item.getString("Type")),
+						item.getInt("OriginID"),
+						item.getInt("OutputID"),
+						item.getBool("RequireTool"),
+						itools);
+				
 				for (Race race:raceMap.values()){
-					Skill skill = skillsArray.get(race).get(effectId/10);
-					if(skill!=null) skill.getEffects().add(
-								new Effect(effectId, baseValue,
-										levelUpMultiplier,
-										noviceLevelUpMultiplier, minValue,
-										maxValue, hasException,
-										exceptionLow, exceptionHigh,
-										exceptionValue, elfLevel, effectType,
-										initiator, output, toolRequired,
-										tooltable));
+					Skill skill = skillsArray.get(race).get(effect.getId()/10);
+					if(skill != null) 
+						skill.getEffects().add(effect);
 				}
-				line = br.readLine();
-			}
+			}			
 			return true;
 		} catch (FileNotFoundException fN) {
 			fN.printStackTrace();
@@ -229,10 +258,10 @@ final class ConfigManager {
 
 	protected boolean readGreeterMessagesfile() {
 		System.out.println("DC Init: Reading greeter messages file: "
-				+ configDirectory + configGreeterMessagesFileName);
+				+ configDirectory + cfgGreeterFile);
 		try {
 			getDefaultValues();
-			FileReader fr = new FileReader(configDirectory + configGreeterMessagesFileName);
+			FileReader fr = new FileReader(configDirectory + cfgGreeterFile);
 			BufferedReader br = new BufferedReader(fr);
 			String messageId = br.readLine();
 			while (messageId != null) {
@@ -266,26 +295,24 @@ final class ConfigManager {
 			getDefaultValues();
 			FileReader fr = new FileReader(configDirectory + configMessagesFileName);
 			BufferedReader br = new BufferedReader(fr);
-			String line = br.readLine();
-			while (line != null) {
-				if (line.length() == 0) {
-					line = br.readLine();
+			
+			String line;
+			while ((line = br.readLine()) != null) {
+				if (line.length() == 0) 
 					continue;
-				}
-				if (line.charAt(0) == '#') {
-					line = br.readLine();
+				if (line.charAt(0) == '#')
 					continue;
-				}
-				String[] theline = line.split(":");
-				if (theline.length > 2) {
-					line = br.readLine();
+				
+				if (line.indexOf(":") <= 0)
 					continue;
-				}
-
-				if (theline[0].equalsIgnoreCase("General Info"))
-					Messages.GeneralInfo = theline[1].trim();
-				if (theline[0].equalsIgnoreCase("Server Rules"))
-					Messages.ServerRules = theline[1].trim();
+				
+				String name = line.substring(0, line.indexOf(":"));
+				String message = line.substring(name.length() + 1);
+				
+				if (name.equalsIgnoreCase("General Info"))
+					Messages.GeneralInfo = message;
+				if (name.equalsIgnoreCase("Server Rules"))
+					Messages.ServerRules = message;
 
 				line = br.readLine();
 			}
@@ -305,67 +332,33 @@ final class ConfigManager {
 	}
 
 	private boolean readSkillsFile() {
-		String line = "";
 		System.out.println("DC Init: Reading skills file: " + configDirectory + configSkillsFileName);
 		try {
-			FileReader fr = new FileReader(configDirectory + configSkillsFileName);
-			BufferedReader br = new BufferedReader(fr);
-			line = br.readLine();
-			while (line != null) {
-				if (line.length() == 0) {
-					line = br.readLine();
-					continue;
-				}
-				if (line.charAt(0) == '#') {
-					line = br.readLine();
-					continue;
-				}
-				if (line.charAt(0) == '^') {
-					configSkillsVersion = Integer.parseInt(line.substring(2));
-					line = br.readLine();
-					continue;
-				}
-				String[] theline = (line + ",Dwarf").split(",");
-				if (theline.length < 12) {
-					continue;
-				}
-				// Creating a new Skill
-				Material trainerHeldMaterial = Material.AIR;
-
-				int id = Integer.parseInt(theline[0]);
-				String displayName = theline[1];
-				// New skill initialized with level 0
-				int level = 0;
-
-				// Training cost stack array created, including "empty"
-				// itemstacks of type 0 qty 0
-				Material TrainingItem1Mat        = Material.getMaterial(Integer.parseInt(theline[2]));
-				double   TrainingItem1BaseCost   = Double.parseDouble(theline[3]);
-				int      TrainingItem1MaxAmount  = Integer.parseInt(theline[4]);
-				Material TrainingItem2Mat        = Material.getMaterial(Integer.parseInt(theline[5]));
-				double   TrainingItem2BaseCost   = Double.parseDouble(theline[6]);
-				int      TrainingItem2MaxAmount  = Integer.parseInt(theline[7]);
-				Material TrainingItem3Mat        = Material.getMaterial(Integer.parseInt(theline[8]));
-				double   TrainingItem3BaseCost   = Double.parseDouble(theline[9]);
-				int      TrainingItem3MaxAmount  = Integer.parseInt(theline[10]);
-				trainerHeldMaterial = Material.getMaterial(Integer.parseInt(theline[11]));
-				// Effects generated from effects file
-				List<Effect> effects = new ArrayList<Effect>();
-				// create the new skill in the skillsarray
+			CSVReader csv = new CSVReader(configDirectory + configSkillsFileName);
+			configSkillsVersion = csv.getVersion();
+			Iterator<CSVRecord> records = csv.getRecords();
+			while(records.hasNext()){
+				CSVRecord item = records.next();
 				
+				Skill skill = new Skill(
+						item.getInt("ID"),
+						item.getString("Name"),
+						0, new ArrayList<Effect>(),
+						Material.getMaterial(item.getInt("Item1")),
+						item.getDouble("Item1Base"), item.getInt("Item1Max"),
+						Material.getMaterial(item.getInt("Item2")),
+						item.getDouble("Item2Base"), item.getInt("Item2Max"),
+						Material.getMaterial(item.getInt("Item3")),
+						item.getDouble("Item3Base"), item.getInt("Item3Max"),
+						Material.getMaterial(item.getInt("Held"))
+					);
 				
-				for (int i = 12;i<theline.length;i++){
-					Race race = findRace(theline[i], true);
-					skillsArray.get(race).put(id,new Skill(id, displayName, level, effects,
-							TrainingItem1Mat, TrainingItem1BaseCost,
-							TrainingItem1MaxAmount, TrainingItem2Mat,
-							TrainingItem2BaseCost, TrainingItem2MaxAmount,
-							TrainingItem3Mat, TrainingItem3BaseCost,
-							TrainingItem3MaxAmount, trainerHeldMaterial));
+				String[] races = item.getString("Races").split(" ");
+				for(String race : races){
+					Race rc = findRace(race, true);
+					skillsArray.get(rc).put(skill.getId(), skill);
 				}
 				
-
-				line = br.readLine();
 			}
 			return true;
 		} catch (FileNotFoundException fN) {

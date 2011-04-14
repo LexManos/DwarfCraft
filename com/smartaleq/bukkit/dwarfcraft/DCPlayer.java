@@ -250,41 +250,13 @@ class DCPlayer {
 	}
 
 	/**
-	 * makes the Dwarf into an elf
-	 * 
-	 * @return
-	 */
-//	private boolean makeElf() {
-//		if (isElf)
-//			return false;
-//		isElf = true;
-//		for (Skill skill : getSkills().values)
-//			if (skill != null)
-//				skill.setLevel(0);
-//		plugin.getDataManager().saveDwarfData(this);
-//		return isElf;
-//	}
-//
-//	/**
-//	 * Makes an elf into a dwarf
-//	 */
-//	protected boolean makeElfIntoDwarf() {
-//		isElf = false;
-//		for (Skill skill : getSkills().values())
-//			if (skill != null)
-//				skill.setLevel(0);
-//		plugin.getDataManager().saveDwarfData(this);
-//		return true;
-//	}
-
-
-	/**
 	 * Removes a set number of items from an inventory No error checking, should
 	 * only be used if the items have already been counted
 	 * 
 	 * @param itemId
 	 * @param amount
 	 */
+	
 	protected void removeInventoryItems(int itemId, int amount) {
 		Inventory inventory = player.getInventory();
 		ItemStack[] contents = inventory.getContents();
@@ -336,6 +308,8 @@ class DCPlayer {
 	}
 	
 	public void changeRace(Race race) {
+		if (race == null)
+			race = plugin.getConfigManager().getDefaultRace();
 		this.race = race;
 		this.skills = plugin.getConfigManager().getAllSkills(race);
 	}

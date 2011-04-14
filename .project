@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>DwarfCraft</name>
-			<type>2</type>
-			<location>C:/Documents and Settings/beckmjo/My Documents/EclipseWorkspace/gitsource/DwarfCraft/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
