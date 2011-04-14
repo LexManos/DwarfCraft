@@ -1,0 +1,9 @@
+DwarfCraft is a RPG-like plugin for minecraft (via Bukkit) that allows players to improve their characters.
+Players(Dwarfs!) may pay materials in a school area to improve a skill level, which will provide benefits
+such as increased weapon damage, decreased tool durability drop, increased drops from blocks or mobs, etc.
+  
+Data used for this plugin comes from two places: 
+On each load, a list of skills and effects is pulled from flatfiles.
+Dwarf's skill levels and world training zones are kept in a database (currently supports only sqlite)  
+
+Useful commands to get started: '/dc help' '/dc tutorial' '/dc info'

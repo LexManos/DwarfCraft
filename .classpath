@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/DwarfCraft/plugins/DwarfCraftSrc/libs/bukkit-0.0.1-SNAPSHOT.jar" sourcepath="C:/Documents and Settings/beckmjo/My Documents/EclipseWorkspace/Bukkit and CraftBukkit/Bukkit-Bukkit-0.0.0-416-gb1ad39a.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/DwarfCraft/plugins/DwarfCraftSrc/libs/craftbukkit.jar" sourcepath="C:/Documents and Settings/beckmjo/My Documents/EclipseWorkspace/Bukkit and CraftBukkit/Bukkit-CraftBukkit-0.0.0-451-g5cc8b7a.zip"/>
+	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/DwarfCraft/plugins/DwarfCraftSrc/libs/sqlite.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/DwarfCraft/plugins/DwarfCraftSrc/libs/Towny.jar" sourcepath="C:/Documents and Settings/beckmjo/My Documents/Downloads/Zren-Towny-bc7147f.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

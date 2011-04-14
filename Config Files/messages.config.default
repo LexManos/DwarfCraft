@@ -1,0 +1,22 @@
+#This file holds custom messages for your server. Using the ':' colon character in your message will break things
+#Blank or missing settings will use the plugin default message
+#You can use &0 thru &f for standard color codes. You can use /n for a newline 
+#Use &p for primary race and &s for secondary (Check DwarfCraft.config for race names)
+#Use &q for primary race plural and &t for secondary race Plural
+
+
+#Put something here. Called when users /dc info
+General Info:
+
+#Put something here. Called when users /dc rules
+Server Rules:
+
+
+## These lines are called when you attempt to change race. Defaults will work with dwarf/elf or user-defined races. 
+## You should only change these if you don't like the "there was a problem in surgery" message
+
+#PRIMARYRACESUCCESS:
+#PRIMARYRACECONFIRM: 
+#SECONDARYRACESUCCESS: 
+#SECONDARYRACECONFIRM: 
+#SECONDARYRACEALREADY:
