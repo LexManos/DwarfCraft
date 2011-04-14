@@ -91,6 +91,12 @@ final class DataManager {
 			}
 			rs.close();
 			
+			rs = statement.executeQuery("select name from sqlite_master WHERE name LIKE 'dwarf%';");
+			while(rs.next()){
+				convertOld(conn, rs.getString("name"));
+				statement.execute("DROP TABLE " + rs.getString("name") + ";");
+			}
+			
 			conn.close();
 		} catch (SQLException e) {
 			System.out.println("[SEVERE]DB not built successfully");
@@ -99,6 +105,45 @@ final class DataManager {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void convertOld(Connection conn, String name) throws SQLException, ClassNotFoundException{
+		Class.forName("org.sqlite.JDBC");
+		ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM " + name + ";" );
+		System.out.println("DC Init: Converting old table: " + name + " (may lag a little wait for complete message)");
+
+		conn.setAutoCommit(false);
+		while(rs.next()){
+			String playerName = rs.getString("playername");
+			int id = getPlayerID(conn, playerName);
+			
+			if(id == -1){
+				PreparedStatement prep = conn.prepareStatement("insert into players(name, race) values(?,?);" );
+				prep.setString(1, playerName);
+				prep.setString(2, (rs.getBoolean("iself") ? "Elf" : "Dwarf"));
+				prep.execute();
+				prep.close();
+				id = getPlayerID(conn, playerName);
+			}			
+
+			PreparedStatement prep = conn.prepareStatement("INSERT INTO skills(player, id, level) values(?,?,?);");			
+			HashMap<Integer,Skill> skills = plugin.getConfigManager().getAllSkills();
+			for(Skill skill : skills.values()){
+				
+				prep.setInt(1, id);
+				prep.setInt(2, skill.getId());
+				try{
+					prep.setInt(3, rs.getInt(skill.toString()));
+				}catch(SQLException e){
+					prep.setInt(3, 0);
+				}
+				prep.addBatch();
+			}
+			prep.executeBatch();
+			prep.close();			
+		}
+		conn.setAutoCommit(true);
+		System.out.println("DC Init: Converting of " + name + " complete");		
 	}
 
 	protected boolean checkTrainersInChunk(Chunk chunk) {
@@ -126,13 +171,16 @@ final class DataManager {
 	}
 
 	protected void createDwarfData(DCPlayer dCPlayer) {
+		createDwarfData(dCPlayer.getPlayer().getName(), dCPlayer.isElf());
+	}
+	protected void createDwarfData(String name, boolean isElf) {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + configManager.getDbPath());
 
 			PreparedStatement prep = conn.prepareStatement("insert into players(name, race) values(?,?);" );
-			prep.setString(1, dCPlayer.getPlayer().getName());
-			prep.setString(2, dCPlayer.isElf() ? "Elf" : "Dwarf");
+			prep.setString(1, name);
+			prep.setString(2, isElf ? "Elf" : "Dwarf");
 			prep.execute();
 			
 			conn.close();
@@ -414,27 +462,34 @@ final class DataManager {
 			}
 		}
 	}
-	
+
 	private int getPlayerID(String name) {
 		try{
 			Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + configManager.getDbPath());
+			int id = getPlayerID(conn, name);
+			conn.close();
+			return id;
+		}catch(Exception e ){
+			System.out.println("DC: Failed to get player ID: " + name);			
+		}
+		return -1;
+	}
+	private int getPlayerID(Connection conn, String name) {
+		try{
 		
 			PreparedStatement prep = conn.prepareStatement("select id from players WHERE name = ?;");
 			prep.setString(1, name);
 			ResultSet rs = prep.executeQuery();
 		
 			if (!rs.next())
-				return -1;
-		
+				return -1;		
 		
 			int id = rs.getInt("id");
 			rs.close();
-			conn.close();
 			return id;
 		}catch(Exception e ){
 			System.out.println("DC: Failed to get player ID: " + name);
-			
 		}
 		return -1;
 	}
