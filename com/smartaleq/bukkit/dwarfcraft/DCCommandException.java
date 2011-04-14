@@ -2,7 +2,7 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 import org.bukkit.command.CommandSender;
 
-class DCCommandException extends Throwable {
+public class DCCommandException extends Throwable {
 
 	public enum Type {
 		TOOFEWARGS("You did not provide enough arguments for that command"), 
@@ -37,16 +37,16 @@ class DCCommandException extends Throwable {
 		this.plugin = plugin;
 	}
 
-	protected DCCommandException(final DwarfCraft plugin, Type type) {
+	public DCCommandException(final DwarfCraft plugin, Type type) {
 		this.plugin = plugin;
 		this.type = type;
 	}
 
-	protected void describe(CommandSender sender) {
+	public void describe(CommandSender sender) {
 		plugin.getOut().sendMessage(sender,type.errorMsg);
 	}
 
-	protected Type getType() {
+	public Type getType() {
 		return type;
 	}
 

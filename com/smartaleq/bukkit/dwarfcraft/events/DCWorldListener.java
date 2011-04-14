@@ -1,13 +1,15 @@
-package com.smartaleq.bukkit.dwarfcraft;
+package com.smartaleq.bukkit.dwarfcraft.events;
 
 import org.bukkit.event.world.WorldListener;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.Chunk;
 
-class DCWorldListener extends WorldListener {
+import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
+
+public class DCWorldListener extends WorldListener {
 	private final DwarfCraft plugin;
 
-	protected DCWorldListener(final DwarfCraft plugin) {
+	public DCWorldListener(final DwarfCraft plugin) {
 		this.plugin = plugin;
 	}
 

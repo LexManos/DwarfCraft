@@ -1,10 +1,10 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
-final class Messages {
+public final class Messages {
 
 	// String messages fixed for DwarfCraft, and backup messages when loading
 	// fails.
-	protected enum Fixed {
+	public enum Fixed {
 		INFO(
 				"This is a dummy General Help Message, please place a message in your messages.config"), SERVERRULESMESSAGE(
 				"This is a dummy Server Rules Message, please place a message in your messages.config"), GENERALHELPMESSAGE(
@@ -55,6 +55,6 @@ final class Messages {
 		}
 	}
 	// String messages loaded from messages.config
-	protected static String GeneralInfo = null;
-	protected static String ServerRules = null;
+	public static String GeneralInfo = null;
+	public static String ServerRules = null;
 }

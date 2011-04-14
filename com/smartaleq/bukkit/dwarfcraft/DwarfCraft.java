@@ -7,6 +7,9 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.smartaleq.bukkit.dwarfcraft.events.*;
+import com.smartaleq.bukkit.dwarfcraft.commands.*;
+
 /**
  * 
  * DwarfCraft is a RPG-like plugin for minecraft (via Bukkit) that allows
@@ -34,24 +37,46 @@ public class DwarfCraft extends JavaPlugin {
 	private DataManager dm;
 	private Out out;
 	
-	protected static int debugMessagesThreshold = 10;
+	public static int debugMessagesThreshold = 10;
 
 	protected ConfigManager getConfigManager() {
 		return cm;
 	}
 
-	protected DataManager getDataManager() {
+	public DataManager getDataManager() {
 		return dm;
 	}
 
 	// TODO: deprecate this, there has to be a better way - move Out to Dwarf?
-	protected Out getOut() {
+	public Out getOut() {
 		return out;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,	String commandLabel, String[] args) {
-		return (new DCCommand(this, command.getName())).execute(sender, commandLabel, args);
+		Command cmd = null;
+		String name = command.getName();
+		
+		if     (name.equalsIgnoreCase("DCHelp"))        cmd = new CommandHelp(this);
+		else if(name.equalsIgnoreCase("RemoveNext"))    cmd = new CommandRemoveNext(this);
+		else if(name.equalsIgnoreCase("SkillSheet"))    cmd = new CommandSkillSheet(this);
+		else if(name.equalsIgnoreCase("Tutorial"))      cmd = new CommandTutorial(this);
+		else if(name.equalsIgnoreCase("Info"))          cmd = new CommandInfo(this);
+		else if(name.equalsIgnoreCase("Rules"))         cmd = new CommandRules(this);
+		else if(name.equalsIgnoreCase("Debug"))         cmd = new CommandDebug(this);
+		else if(name.equalsIgnoreCase("DCCommands"))    cmd = new CommandDCCommands(this);
+		else if(name.equalsIgnoreCase("ListTrainers"))  cmd = new CommandListTrainers(this);
+		else if(name.equalsIgnoreCase("RemoveTrainer")) cmd = new CommandRemoveTrainer(this);
+		else if(name.equalsIgnoreCase("SkillInfo"))     cmd = new CommandSkillInfo(this);
+		else if(name.equalsIgnoreCase("Race"))          cmd = new CommandRace(this);
+		else if(name.equalsIgnoreCase("SetSkill"))      cmd = new CommandSetSkill(this);
+		else if(name.equalsIgnoreCase("EffectInfo"))    cmd = new CommandEffectInfo(this);
+		else if(name.equalsIgnoreCase("CreateGreeter")) cmd = new CommandCreateGreeter(this);
+		else if(name.equalsIgnoreCase("CreateTrainer")) cmd = new CommandCreateTrainer(this);
+			
+		if (cmd == null)
+			return false;
+		return cmd.execute(sender, commandLabel, args);
 	}
 
 	/**

@@ -4,13 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.io.FileOutputStream;
 import org.bukkit.Material;
 import org.jbls.LexManos.CSV.CSVReader;
@@ -344,12 +342,18 @@ final class ConfigManager {
 						item.getInt("ID"),
 						item.getString("Name"),
 						0, new ArrayList<Effect>(),
-						Material.getMaterial(item.getInt("Item1")),
-						item.getDouble("Item1Base"), item.getInt("Item1Max"),
-						Material.getMaterial(item.getInt("Item2")),
-						item.getDouble("Item2Base"), item.getInt("Item2Max"),
-						Material.getMaterial(item.getInt("Item3")),
-						item.getDouble("Item3Base"), item.getInt("Item3Max"),
+						new TrainingItem(
+								Material.getMaterial(item.getInt("Item1")),
+								item.getDouble("Item1Base"), item.getInt("Item1Max")
+						),
+						new TrainingItem(
+								Material.getMaterial(item.getInt("Item2")),
+								item.getDouble("Item2Base"), item.getInt("Item2Max")
+						),
+						new TrainingItem(
+								Material.getMaterial(item.getInt("Item3")),
+								item.getDouble("Item3Base"), item.getInt("Item3Max")
+						),
 						Material.getMaterial(item.getInt("Held"))
 					);
 				

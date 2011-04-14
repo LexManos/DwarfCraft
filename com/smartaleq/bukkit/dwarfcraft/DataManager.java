@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import org.bukkit.entity.Vehicle;
 
 import redecouverte.npcspawner.NpcSpawner;
 
-final class DataManager {
+public class DataManager {
 
 	private List<DCPlayer> dwarves = new ArrayList<DCPlayer>();
 	private List<DwarfVehicle> vehicleList = new ArrayList<DwarfVehicle>();
@@ -43,7 +42,7 @@ final class DataManager {
 		}
 	}
 
-	protected void addVehicle(DwarfVehicle v) {
+	public void addVehicle(DwarfVehicle v) {
 		vehicleList.add(v);
 	}
 
@@ -146,7 +145,7 @@ final class DataManager {
 		System.out.println("DC Init: Converting of " + name + " complete");		
 	}
 
-	protected boolean checkTrainersInChunk(Chunk chunk) {
+	public boolean checkTrainersInChunk(Chunk chunk) {
 		for (Iterator<Map.Entry<String, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext();) {
 			Map.Entry<String, DwarfTrainer> pairs = i.next();
 			DwarfTrainer d = (pairs.getValue());
@@ -159,7 +158,7 @@ final class DataManager {
 		return false;
 	}
 
-	protected DCPlayer createDwarf(Player player) {
+	public DCPlayer createDwarf(Player player) {
 		DCPlayer newDwarf = new DCPlayer(plugin, player);
 		newDwarf.changeRace(plugin.getConfigManager().getDefaultRace());
 		newDwarf.setSkills(plugin.getConfigManager().getAllSkills(newDwarf.getRace()));
@@ -170,7 +169,7 @@ final class DataManager {
 		return newDwarf;
 	}
 
-	protected void createDwarfData(DCPlayer dCPlayer) {
+	public void createDwarfData(DCPlayer dCPlayer) {
 		createDwarfData(dCPlayer.getPlayer().getName(), dCPlayer.isElf());
 	}
 	protected void createDwarfData(String name, boolean isElf) {
@@ -197,20 +196,6 @@ final class DataManager {
 			ResultSet rs;
 			rs = statement.executeQuery("select * from sqlite_master WHERE name = 'players';");
 			if (!rs.next()){
-				/*for (int versionNumber = configManager.getConfigSkillsVersion() - 1; versionNumber >= 100; versionNumber--) { 
-					rs = statement.executeQuery("select * from sqlite_master WHERE name = 'dwarfs" + versionNumber + "';");
-					if (rs.next()) { // if there is a recent past tabl,
-											// use it to build the new table
-						conn.close();
-						buildDB(versionNumber);
-						return;
-					}
-				}
-				conn.close();
-				buildDB(0); // if there are no recent past tables, build a new
-							// db from scratch
-				* 
-			 	*/
 				buildDB(0);
 			}
 			conn.close();
@@ -228,7 +213,7 @@ final class DataManager {
 	 * @param player
 	 * @return dwarf or null
 	 */
-	protected DCPlayer find(Player player) {
+	public DCPlayer find(Player player) {
 		for (DCPlayer d : plugin.getDataManager().getDwarves()) {
 			if (d != null){
 				if (d.getPlayer() != null){
@@ -252,7 +237,7 @@ final class DataManager {
 		}
 	}
 
-	protected boolean getDwarfData(DCPlayer player) {
+	public boolean getDwarfData(DCPlayer player) {
 		return getDwarfData(player, player.getPlayer().getName());
 	}
 
@@ -312,7 +297,7 @@ final class DataManager {
 		return greeterMessageList.get(messageId);
 	}
 
-	protected DwarfTrainer getTrainer(Entity entity) {
+	public DwarfTrainer getTrainer(Entity entity) {
 		// kind of ugly, could replace this with a hashmap, but i dont think the
 		// perf. gains will be very significant
 		for (Iterator<Map.Entry<String, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext();) {
@@ -328,7 +313,7 @@ final class DataManager {
 		return (trainerList.get(str)); // can return null
 	}
 
-	protected DwarfVehicle getVehicle(Vehicle v) {
+	public DwarfVehicle getVehicle(Vehicle v) {
 		for (DwarfVehicle i : vehicleList) {
 			if (i.equals(v)) {
 				return i;
@@ -346,7 +331,7 @@ final class DataManager {
 		}
 	}
 
-	protected void insertTrainer(DwarfTrainer d) {
+	public void insertTrainer(DwarfTrainer d) {
 		assert (d != null);
 		trainerList.put(d.getUniqueId(), d);
 		// SCHEMA(world,uniqueId,name,skill,maxSkill,material,isGreeter,messageId,x,y,z,yaw,pitch)
@@ -436,7 +421,7 @@ final class DataManager {
 	}
 
 
-	protected void removeTrainer(String str) {
+	public void removeTrainer(String str) {
 		DwarfTrainer d;
 		d = trainerList.remove(str);
 		NpcSpawner.RemoveBasicHumanNpc(d.getBasicHumanNpc());
@@ -453,7 +438,7 @@ final class DataManager {
 		}
 	}
 
-	protected void removeVehicle(Vehicle v) {
+	public void removeVehicle(Vehicle v) {
 		for (DwarfVehicle i : vehicleList) {
 			if (i.equals(v)) {
 				plugin.getDataManager().vehicleList.remove(i);
@@ -494,7 +479,7 @@ final class DataManager {
 		return -1;
 	}
 
-	protected boolean saveDwarfData(DCPlayer dCPlayer) {
+	public boolean saveDwarfData(DCPlayer dCPlayer) {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Connection conn = DriverManager.getConnection("jdbc:sqlite:" + configManager.getDbPath());

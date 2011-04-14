@@ -1,4 +1,4 @@
-package com.smartaleq.bukkit.dwarfcraft;
+package com.smartaleq.bukkit.dwarfcraft.events;
 
 import org.bukkit.craftbukkit.entity.CraftBoat;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
@@ -10,10 +10,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 
-class DCVehicleListener extends VehicleListener {
+import com.smartaleq.bukkit.dwarfcraft.DCPlayer;
+import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
+import com.smartaleq.bukkit.dwarfcraft.DwarfVehicle;
+import com.smartaleq.bukkit.dwarfcraft.Effect;
+import com.smartaleq.bukkit.dwarfcraft.EffectType;
+import com.smartaleq.bukkit.dwarfcraft.Skill;
+
+public class DCVehicleListener extends VehicleListener {
 	private final DwarfCraft plugin;
 
-	protected DCVehicleListener(final DwarfCraft plugin) {
+	public DCVehicleListener(final DwarfCraft plugin) {
 		this.plugin = plugin;
 	}
 
@@ -24,7 +31,7 @@ class DCVehicleListener extends VehicleListener {
 	 */
 	@Override
 	public void onVehicleDamage(VehicleDamageEvent event) {
-		// if(event.getDamage()>event.getVehicle().getHealth()) dropstuff
+		// if(event.getDamage() > event.getVehicle().getHealth()) dropstuff
 		event.getAttacker();
 	}
 

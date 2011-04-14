@@ -69,7 +69,7 @@ public class Out {
 		return null;
 	}
 
-	protected boolean effectInfo(CommandSender sender, DCPlayer dCPlayer,
+	public boolean effectInfo(CommandSender sender, DCPlayer dCPlayer,
 			Effect effect) {
 		sendMessage(sender, effect.describeLevel(dCPlayer),
 				"&6[&5" + effect.getId() + "&6] ");
@@ -82,7 +82,7 @@ public class Out {
 		sendMessage(sender, "&d" + Messages.GeneralInfo, "&6[&d?&6] ");
 	}
 
-	protected void info(CommandSender sender) {
+	public void info(CommandSender sender) {
 		sendMessage(sender, Messages.GeneralInfo, "&6[&dInfo&6] ");
 	}
 
@@ -211,8 +211,7 @@ public class Out {
 		return lastColor;
 	}
 
-	protected boolean printSkillInfo(CommandSender sender, Skill skill,
-			DCPlayer dCPlayer, int maxTrainLevel) {
+	public boolean printSkillInfo(CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel) {
 		// general line
 		sendMessage(
 				sender,
@@ -249,7 +248,7 @@ public class Out {
 		return true;
 	}
 
-	protected void printSkillSheet(DCPlayer dCPlayer, CommandSender sender,
+	public void printSkillSheet(DCPlayer dCPlayer, CommandSender sender,
 			String displayName, boolean printFull) {
 		String message1;
 		String message2 = "";
@@ -317,7 +316,7 @@ public class Out {
 			sendMessage(sender, untrainedSkills, prefix2);
 	}
 
-	protected void printTrainerList(CommandSender sender) {
+	public void printTrainerList(CommandSender sender) {
 		if (plugin.getDataManager().trainerList.isEmpty()) {
 			sendMessage(sender, "There are currently no trainers.");
 		} else {
@@ -346,14 +345,14 @@ public class Out {
 
 
 
-	protected void rules(CommandSender sender) {
+	public void rules(CommandSender sender) {
 		sendMessage(sender, Messages.ServerRules, "&6[&dRules&6] ");
 	}
 
 	/**
 	 * Used to send messages to all players on a server
 	 */
-	protected void sendBroadcast(Server server, String message) {
+	public void sendBroadcast(Server server, String message) {
 		sendBroadcast(server, message, "");
 	}
 
@@ -368,7 +367,7 @@ public class Out {
 	/**
 	 * Used to send messages to one player or console
 	 */
-	protected void sendMessage(CommandSender sender, String message) {
+	public void sendMessage(CommandSender sender, String message) {
 		sendMessage(sender, message, "");
 	}
 
@@ -463,7 +462,7 @@ public class Out {
 		return message;
 	}
 
-	protected void tutorial(CommandSender sender, int i) {
+	public void tutorial(CommandSender sender, int i) {
 		switch(i) {
 			case 1: sendMessage(sender, Messages.Fixed.TUTORIAL1.getMessage(), "&6[&dDC&6] "); break;
 			case 2: sendMessage(sender, Messages.Fixed.TUTORIAL2.getMessage(), "&6[&dDC&6] "); break;
@@ -481,23 +480,20 @@ public class Out {
 	 * @param server
 	 * @param dCPlayer
 	 */
-	protected void welcome(Server server, DCPlayer dCPlayer) {
+	public void welcome(Server server, DCPlayer dCPlayer) {
 		try {
-			String raceName = "";
-			raceName = (dCPlayer.isElf() ?  "&f&s" : "&9&p");
-			sendBroadcast(server, "&fWelcome, " + raceName + " &6" + dCPlayer.getPlayer().getName(), "&6[DC]         ");
+			sendBroadcast(server, "&fWelcome, &9" + dCPlayer.getRace().getName() + " &6" + dCPlayer.getPlayer().getName(), "&6[DC]         ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void race(CommandSender sender, Player player) {
+	public void race(CommandSender sender, Player player) {
 		sendMessage(sender, "You are a "+plugin.getDataManager().find(player).getRace());
 	}
 	
 	public void alreadyRace(CommandSender sender, DCPlayer dCPlayer, Race newRace) {
-		sendMessage(sender, "You are already a "+newRace);
-		
+		sendMessage(sender, "You are already a "+newRace);		
 	}
 
 	public void resetRace(CommandSender sender, DCPlayer dCPlayer, Race newRace) {

@@ -6,13 +6,13 @@ import net.minecraft.server.ItemStack;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import net.minecraft.server.ContainerWorkbench;
 
-class DCCraftSchedule implements Runnable {
+public class DCCraftSchedule implements Runnable {
 	private final DCPlayer dCPlayer;
 	private final DwarfCraft plugin;
 	private final EntityPlayer entityPlayer;
 	private ContainerWorkbench workBench;
 
-	protected DCCraftSchedule(DwarfCraft newPlugin, DCPlayer newDwarf) {
+	public DCCraftSchedule(DwarfCraft newPlugin, DCPlayer newDwarf) {
 		this.dCPlayer = newDwarf;
 		this.plugin = newPlugin;
 		this.entityPlayer = ((CraftPlayer) (dCPlayer.getPlayer())).getHandle();
@@ -38,8 +38,7 @@ class DCCraftSchedule implements Runnable {
 			int damage = outputStack.damage;
 			for (Skill s : dCPlayer.getSkills().values()) {
 				for (Effect e : s.getEffects()) {
-					if (e.getEffectType() == EffectType.CRAFT
-							&& materialId == e.getOutputId() && damage == e.getInitiatorId()) {
+					if (e.getEffectType() == EffectType.CRAFT && materialId == e.getOutputId() && damage == e.getInitiatorId()) {
 						outputStack.count = (int) e.getEffectAmount(dCPlayer);
 						// TODO: need code to check max stack size and if amount
 						// created > max stack size drop all count above 1 to
@@ -52,9 +51,6 @@ class DCCraftSchedule implements Runnable {
 												// crafting bench
 			}
 		}
-		plugin.getServer()
-				.getScheduler()
-				.scheduleSyncDelayedTask(plugin,
-						new DCCraftSchedule(plugin, dCPlayer), 2);
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DCCraftSchedule(plugin, dCPlayer), 2);
 	}
 }

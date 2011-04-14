@@ -9,20 +9,19 @@ import org.bukkit.entity.Player;
 
 import com.smartaleq.bukkit.dwarfcraft.DCCommandException.Type;
 
-final class CommandParser {
+public final class CommandParser {
 	private final DwarfCraft plugin;
 	private CommandSender sender;
 	private String[] input;
 	private DCPlayer target = null;
 
-	protected CommandParser(final DwarfCraft plugin, CommandSender sender,
-			String[] args) {
+	public CommandParser(final DwarfCraft plugin, CommandSender sender, String[] args) {
 		this.plugin = plugin;
 		this.sender = sender;
 		this.input = args;
 	}
 
-	protected List<Object> parse(List<Object> desiredArguments,
+	public List<Object> parse(List<Object> desiredArguments,
 			boolean ignoreSize) throws DCCommandException {
 		List<Object> output = new ArrayList<Object>();
 		int arrayIterator = 0;
@@ -38,23 +37,17 @@ final class CommandParser {
 					output.add(parseEffect(arrayIterator));
 				else if (o instanceof Boolean)
 					output.add(parseConfirm(arrayIterator));
-				else if (o instanceof Race
-						&& ((String) o).equalsIgnoreCase("newRace"))
+				else if (o instanceof Race && ((String) o).equalsIgnoreCase("newRace"))
 					output.add(parseRace(arrayIterator));
-				else if (o instanceof String
-						&& ((String) o).equalsIgnoreCase("SkillLevelInt"))
+				else if (o instanceof String && ((String) o).equalsIgnoreCase("SkillLevelInt"))
 					output.add(parseSkillLevel(arrayIterator));
-				else if (o instanceof String
-						&& ((String) o).equalsIgnoreCase("UniqueIdAdd"))
+				else if (o instanceof String && ((String) o).equalsIgnoreCase("UniqueIdAdd"))
 					output.add(parseUniqueId(arrayIterator, true));
-				else if (o instanceof String
-						&& ((String) o).equalsIgnoreCase("UniqueIdRmv"))
+				else if (o instanceof String && ((String) o).equalsIgnoreCase("UniqueIdRmv"))
 					output.add(parseUniqueId(arrayIterator, false));
-				else if (o instanceof String
-						&& ((String) o).equalsIgnoreCase("Name"))
+				else if (o instanceof String && ((String) o).equalsIgnoreCase("Name"))
 					output.add(parseName(arrayIterator));
-				else if (o instanceof String
-						&& ((String) o).equalsIgnoreCase("GreeterMessage"))
+				else if (o instanceof String && ((String) o).equalsIgnoreCase("GreeterMessage"))
 					output.add(parseGreeterMessage(arrayIterator));
 				else if (o instanceof Integer)
 					output.add(parseInteger(arrayIterator));

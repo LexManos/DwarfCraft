@@ -2,7 +2,7 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 import org.bukkit.Material;
 
-final class Effect {
+public class Effect {
 
 	final private int id;
 
@@ -24,7 +24,7 @@ final class Effect {
 	final private boolean toolRequired;
 	final private int[] tools;
 
-	protected Effect(int id, double baseValue, double levelUpMultiplier,
+	public Effect(int id, double baseValue, double levelUpMultiplier,
 			double noviceLevelUpMultiplier, double minValue, double maxValue,
 			boolean hasException, double exceptionLow,
 			double exceptionHigh, double exceptionValue, int elfEffectLevel,
@@ -65,8 +65,7 @@ final class Effect {
 		double effectAmountHigh = getEffectAmount(30);
 		double elfAmount = getEffectAmount(elfEffectLevel);
 		String toolType = toolType();
-		description = String
-				.format("Effect Block Trigger: %s Block Output: %s . "
+		description = String.format("Effect Block Trigger: %s Block Output: %s . "
 						+ "Effect value ranges from %.2f - %.2f for levels 0 to 30. "
 						+ "Elves have the effect %.2f , as if they were level %d . "
 						+ "Tools affected: %s. "
@@ -243,7 +242,7 @@ final class Effect {
 	 * @param dCPlayer
 	 * @return
 	 */
-	protected double getEffectAmount(DCPlayer dCPlayer) {
+	public double getEffectAmount(DCPlayer dCPlayer) {
 		double effectAmount = baseValue;
 		int skillLevel;
 		skillLevel = dCPlayer.skillLevel(this.id / 10);
@@ -290,7 +289,7 @@ final class Effect {
 		return effectAmount;
 	}
 
-	protected EffectType getEffectType() {
+	public EffectType getEffectType() {
 		return effectType;
 	}
 
@@ -298,23 +297,23 @@ final class Effect {
 		return elfEffectLevel;
 	}
 
-	protected int getId() {
+	public int getId() {
 		return id;
 	}
 
-	protected int getInitiatorId() {
+	public int getInitiatorId() {
 		return initiatorId;
 	}
 
-	protected int getOutputId() {
+	public int getOutputId() {
 		return outputId;
 	}
 
-	protected boolean getToolRequired() {
+	public boolean getToolRequired() {
 		return toolRequired;
 	}
 
-	protected int[] getTools() {
+	public int[] getTools() {
 		return tools;
 	}
 
@@ -341,6 +340,13 @@ final class Effect {
 				return "shovels";
 		}
 		return "any tool";
+	}
+	
+	public boolean checkTool(int toolID){
+		for (int id : tools)
+			if (id == toolID)
+				return true;
+		return false;
 	}
 
 	@Override

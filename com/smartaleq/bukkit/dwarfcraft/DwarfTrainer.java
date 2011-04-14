@@ -12,7 +12,7 @@ import org.bukkit.World;
 
 import redecouverte.npcspawner.*;
 
-final class DwarfTrainer {
+public final class DwarfTrainer {
 	// protected static BasicHumanNpcList HumanNpcList;
 	private BasicHumanNpc basicHumanNpc;
 	private Integer skillId;
@@ -27,7 +27,7 @@ final class DwarfTrainer {
 	private final DwarfCraft plugin;
 
 	// constructor only for *trainers*
-	protected DwarfTrainer(final DwarfCraft plugin, Location location,
+	public DwarfTrainer(final DwarfCraft plugin, Location location,
 			String uniqueId, String name, Integer skillId, Integer maxSkill,
 			String greeterMessage, boolean isGreeter) {
 		this.plugin = plugin;
@@ -105,7 +105,7 @@ final class DwarfTrainer {
 		return false;
 	}
 
-	protected BasicHumanNpc getBasicHumanNpc() {
+	public BasicHumanNpc getBasicHumanNpc() {
 		return basicHumanNpc;
 	}
 
@@ -120,7 +120,7 @@ final class DwarfTrainer {
 			return (Material.AIR.getId());
 	}
 
-	protected Integer getMaxSkill() {
+	public Integer getMaxSkill() {
 		return maxSkill;
 	}
 
@@ -132,11 +132,11 @@ final class DwarfTrainer {
 		return basicHumanNpc.getName();
 	}
 
-	protected Integer getSkillTrained() {
+	public Integer getSkillTrained() {
 		return skillId;
 	}
 
-	protected String getUniqueId() {
+	public String getUniqueId() {
 		return basicHumanNpc.getUniqueId();
 	}
 
@@ -144,11 +144,11 @@ final class DwarfTrainer {
 		return world;
 	}
 
-	protected boolean isGreeter() {
+	public boolean isGreeter() {
 		return greeter;
 	}
 
-	protected void lookAt(Entity target) {
+	public void lookAt(Entity target) {
 		assert (target != null);
 		Location l;
 		l = target.getLocation().clone();
@@ -164,7 +164,7 @@ final class DwarfTrainer {
 		return;
 	}
 
-	protected void printLeftClick(Player player) {
+	public void printLeftClick(Player player) {
 		GreeterMessage msg = plugin.getDataManager().getGreeterMessage(
 				messageId);
 		if (msg != null) {
@@ -179,7 +179,7 @@ final class DwarfTrainer {
 		return;
 	}
 
-	protected void printRightClick(Player player) {
+	public void printRightClick(Player player) {
 		GreeterMessage msg = plugin.getDataManager().getGreeterMessage(
 				messageId);
 		if (msg != null) {
@@ -188,7 +188,7 @@ final class DwarfTrainer {
 		return;
 	}
 
-	protected void trainSkill(DCPlayer dCPlayer) {
+	public void trainSkill(DCPlayer dCPlayer) {
 		boolean soFarSoGood = true;
 		Skill skill = dCPlayer.getSkill(this.skillId);
 		Player player = dCPlayer.getPlayer();

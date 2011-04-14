@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-class DCPlayer {
+public class DCPlayer {
 	private final DwarfCraft plugin;
 	private HashMap<Integer, Skill> skills;
 	private Player player;
@@ -21,7 +21,7 @@ class DCPlayer {
 		this.player = player;
 	}
 
-	protected DCPlayer(final DwarfCraft plugin, Player whoami) {
+	public DCPlayer(final DwarfCraft plugin, Player whoami) {
 		this.plugin = plugin;
 		player = whoami;
 		race = plugin.getConfigManager().getDefaultRace();
@@ -67,19 +67,16 @@ class DCPlayer {
 
 		// create output item stack of new items
 		
-		trainingStack.add(new ItemStack(skill.getTrainingItem1Mat(), 
-				(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.getTrainingItem1BaseCost() * multiplier - .01),
-				skill.getTrainingItem1MaxAmount())));
+		trainingStack.add(new ItemStack(skill.Item1.Item, 
+				(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item1.Base * multiplier - .01), skill.Item1.Max)));
 		
-		if (skill.getTrainingItem2Mat() != Material.AIR){
-			trainingStack.add(new ItemStack(skill.getTrainingItem2Mat(),
-					(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.getTrainingItem2BaseCost() * multiplier - .01), 
-					skill.getTrainingItem2MaxAmount())));
+		if (skill.Item2.Item != Material.AIR){
+			trainingStack.add(new ItemStack(skill.Item2.Item,
+					(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item2.Base * multiplier - .01), skill.Item2.Max)));
 		}
-		if (skill.getTrainingItem3Mat() != Material.AIR){
-			trainingStack.add(new ItemStack(skill.getTrainingItem3Mat(), 
-							(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.getTrainingItem3BaseCost() * multiplier - .01),
-							skill.getTrainingItem3MaxAmount())));
+		if (skill.Item3.Item != Material.AIR){
+			trainingStack.add(new ItemStack(skill.Item3.Item, 
+							(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item3.Base * multiplier - .01), skill.Item3.Max)));
 		}
 		return trainingStack;
 	}
@@ -162,7 +159,7 @@ class DCPlayer {
 		return null;
 	}
 
-	protected Player getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
@@ -187,7 +184,7 @@ class DCPlayer {
 	 * @param skillId
 	 * @return Skill or null if none found
 	 */
-	protected Skill getSkill(int skillId) {
+	public Skill getSkill(int skillId) {
 		Skill skill = skills.get(skillId);
 		return skill;
 	}
@@ -219,7 +216,7 @@ class DCPlayer {
 		return null;
 	}
 
-	protected HashMap<Integer, Skill> getSkills() {
+	public HashMap<Integer, Skill> getSkills() {
 		return skills;
 	}
 		
@@ -297,7 +294,7 @@ class DCPlayer {
 		return 0;
 	}
 
-	protected int countArmorPieces(ArmorType type){
+	public int countArmorPieces(ArmorType type){
 		int count = 0;
 		PlayerInventory inv = this.getPlayer().getInventory();
 		if (type.ids.contains(inv.getHelmet().getTypeId())) count++;
@@ -318,7 +315,7 @@ class DCPlayer {
 		return race;
 	}
 
-	protected enum ArmorType{
+	public enum ArmorType{
 		IRON (Arrays.asList(306,307,308,309)),
 		GOLD (Arrays.asList(314,315,316,317)),
 		LEATHER (Arrays.asList(298,299,300,301)),

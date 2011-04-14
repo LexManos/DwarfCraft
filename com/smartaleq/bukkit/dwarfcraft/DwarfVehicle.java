@@ -9,7 +9,7 @@ public class DwarfVehicle {
 	private Vector velocity;
 	private Location location;
 
-	protected DwarfVehicle(Vehicle vehicle) {
+	public DwarfVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
 		this.velocity = vehicle.getVelocity().clone();
 		this.location = vehicle.getLocation().clone();

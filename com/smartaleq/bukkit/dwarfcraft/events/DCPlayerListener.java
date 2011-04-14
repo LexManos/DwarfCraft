@@ -1,21 +1,29 @@
-package com.smartaleq.bukkit.dwarfcraft;
+package com.smartaleq.bukkit.dwarfcraft.events;
 
 import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
 
-class DCPlayerListener extends PlayerListener {
+import com.smartaleq.bukkit.dwarfcraft.DCCraftSchedule;
+import com.smartaleq.bukkit.dwarfcraft.DCPlayer;
+import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
+import com.smartaleq.bukkit.dwarfcraft.Effect;
+import com.smartaleq.bukkit.dwarfcraft.EffectType;
+import com.smartaleq.bukkit.dwarfcraft.Skill;
+import com.smartaleq.bukkit.dwarfcraft.Util;
+
+public class DCPlayerListener extends PlayerListener {
 	private final DwarfCraft plugin;
 
-	protected DCPlayerListener(final DwarfCraft plugin) {
+	public DCPlayerListener(final DwarfCraft plugin) {
 		this.plugin = plugin;
 	}
 
@@ -26,7 +34,7 @@ class DCPlayerListener extends PlayerListener {
 	 * also broadcasts a welcome "player" message
 	 */
 	@Override
-	public void onPlayerJoin(PlayerEvent event) {
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		DCPlayer dCPlayer = plugin.getDataManager().find(player);
 		if (dCPlayer == null) {

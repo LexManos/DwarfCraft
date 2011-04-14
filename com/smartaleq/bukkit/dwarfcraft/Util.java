@@ -41,7 +41,7 @@ public class Util {
 	 * @param loc
 	 *            Location of item drop
 	 */
-	protected static void dropBlockEffect(Location loc, Effect e,
+	public static void dropBlockEffect(Location loc, Effect e,
 			double effectAmount, boolean dropNaturally, short dmgValue) {
 		int outputId = e.getOutputId();
 		ItemStack item;
@@ -74,7 +74,7 @@ public class Util {
 		return len;
 	}
 
-	protected static int randomAmount(double input) {
+	public static int randomAmount(double input) {
 		double rand = Math.random();
 		if (rand > input % 1)
 			return (int) Math.floor(input);
@@ -92,7 +92,7 @@ public class Util {
 		return retval;
 	}
 
-	protected static boolean toolChecker(Player player) {
+	public static boolean toolChecker(Player player) {
 		Inventory inv = player.getInventory();
 		ItemStack[] contents = inv.getContents();
 		ItemStack[] newContents = contents.clone();
