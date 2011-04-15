@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
@@ -25,6 +26,10 @@ public class DCPlayerListener extends PlayerListener {
 
 	public DCPlayerListener(final DwarfCraft plugin) {
 		this.plugin = plugin;
+	}
+	
+	public void onPlayerQuit(PlayerQuitEvent event)
+	{
 	}
 
 	/**
@@ -56,7 +61,8 @@ public class DCPlayerListener extends PlayerListener {
 		//Crafting changes
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.WORKBENCH){
 			DCCraftSchedule sched = new DCCraftSchedule(plugin, plugin.getDataManager().find(event.getPlayer()));
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, sched, 5);
+			int id = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, sched, 0, 2);
+			sched.setID(id);
 		}
 		
 		Player     player = event.getPlayer();

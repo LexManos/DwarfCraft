@@ -62,9 +62,6 @@ public final class CommandParser {
 			throw new DCCommandException(plugin, Type.TOOMANYARGS);
 		if (input.length < output.size() && !ignoreSize)
 			throw new DCCommandException(plugin, Type.TOOFEWARGS);
-		for (Object o : output)
-			if (o == null)
-				throw new DCCommandException(plugin);
 		return output;
 	}
 
@@ -178,8 +175,7 @@ public final class CommandParser {
 				return plugin.getConfigManager().getAllSkills(target.getRace()).get(skillID);
 			} catch (NumberFormatException nfe) {
 				if (inputString.length() < 5)
-					throw new DCCommandException(plugin,
-							Type.PARSESKILLFAIL);
+					throw new DCCommandException(plugin, Type.PARSESKILLFAIL);
 				for (Skill s : plugin.getConfigManager().getAllSkills(target.getRace()).values()) {
 					if (s.getDisplayName().regionMatches(0, inputString, 0, 5))
 					return s;

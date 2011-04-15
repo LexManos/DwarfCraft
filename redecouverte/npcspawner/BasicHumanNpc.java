@@ -1,7 +1,6 @@
 package redecouverte.npcspawner;
 
 import java.lang.reflect.Field;
-import java.util.logging.Logger;
 import net.minecraft.server.EntityLiving;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.entity.HumanEntity;
@@ -10,7 +9,7 @@ import org.bukkit.entity.LivingEntity;
 public class BasicHumanNpc extends BasicNpc {
 
     private CHumanNpc mcEntity;
-    private static final Logger logger = Logger.getLogger("Minecraft");
+    //private static final Logger logger = Logger.getLogger("Minecraft");
 
     public BasicHumanNpc(CHumanNpc entity, String uniqueId, String name) {
         super(uniqueId, name);

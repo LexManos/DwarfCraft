@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 
 public class BasicHumanNpcList extends HashMap<String, BasicHumanNpc> {
 
+	private static final long serialVersionUID = 4325065770267149604L;
 
 	public boolean containsBukkitEntity(Entity entity)
     {

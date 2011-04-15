@@ -225,15 +225,12 @@ public final class DwarfTrainer {
 			if (dCPlayer.countItem(itemStack.getTypeId()) < itemStack.getAmount()) {
 				plugin.getOut().sendMessage(
 						player,
-						"&cYou do not have the &2" + itemStack.getAmount()
-								+ " " + itemStack.getType() + " &crequired",
+						"&cYou do not have the &2" + itemStack.getAmount() + " " + itemStack.getType() + " &crequired",
 						"&6[Train &b" + skill.getId() + "&6] ");
 				soFarSoGood = false;
 			} else
-				plugin.getOut().sendMessage(
-						player,
-						"&aYou have the &2" + itemStack.getAmount() + " "
-								+ itemStack.getType() + " &arequired",
+				plugin.getOut().sendMessage(player,
+						"&aYou have the &2" + itemStack.getAmount() + " " + itemStack.getType() + " &arequired",
 						"&6[Train &b" + skill.getId() + "&6] ");
 
 		}
@@ -242,10 +239,8 @@ public final class DwarfTrainer {
 		if (soFarSoGood) {
 			skill.setLevel(skill.getLevel() + 1);
 			for (ItemStack itemStack : trainingCosts)
-				dCPlayer.removeInventoryItems(itemStack.getTypeId(),
-						itemStack.getAmount());
-			plugin.getOut().sendMessage(player, "&6Training Successful!",
-					"&6[&b" + skill.getId() + "&6] ");
+				dCPlayer.removeInventoryItems(itemStack.getTypeId(), itemStack.getAmount());
+			plugin.getOut().sendMessage(player, "&6Training Successful!", "&6[&b" + skill.getId() + "&6] ");
 			plugin.getDataManager().saveDwarfData(dCPlayer);
 			return;
 		} else {

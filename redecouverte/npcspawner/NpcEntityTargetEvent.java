@@ -6,7 +6,9 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 public class NpcEntityTargetEvent extends EntityTargetEvent {
 
-    public static enum NpcTargetReason {
+	private static final long serialVersionUID = 1802343027839971850L;
+
+	public static enum NpcTargetReason {
         CLOSEST_PLAYER, NPC_RIGHTCLICKED, NPC_BOUNCED
     }
     private NpcTargetReason reason;

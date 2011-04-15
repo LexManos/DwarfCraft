@@ -1,6 +1,5 @@
 package redecouverte.npcspawner;
 
-import java.util.logging.Logger;
 import net.minecraft.server.Entity;
 import net.minecraft.server.EntityHuman;
 import net.minecraft.server.EntityPlayer;
@@ -15,7 +14,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 
 public class CHumanNpc extends EntityPlayer {
 
-    private static final Logger logger = Logger.getLogger("Minecraft");
+    //private static final Logger logger = Logger.getLogger("Minecraft");
     private int lastTargetId;
     private long lastBounceTick;
     private int lastBounceId;

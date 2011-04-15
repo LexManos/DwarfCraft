@@ -50,10 +50,10 @@ public class CommandSetSkill extends Command {
 				
 				try {
 					outputList = parser.parse(desiredArguments, false);
-					dCPlayer = (DCPlayer) outputList.get(0);
-					skill = (Skill) outputList.get(1);
-					level = (Integer) outputList.get(2);
-					name = dCPlayer.getPlayer().getName();
+					dCPlayer = (DCPlayer)outputList.get(0);
+					skill    = (Skill)outputList.get(1);
+					level    = (Integer)outputList.get(2);
+					name     = dCPlayer.getPlayer().getName();
 				} catch (DCCommandException e) {
 					if (e.getType() == Type.TOOFEWARGS) {
 						if (sender instanceof Player){
@@ -71,10 +71,15 @@ public class CommandSetSkill extends Command {
 				}
 				if(skill == null){
 					for(Skill s : dCPlayer.getSkills().values()){
-						setSkill(dCPlayer, name, s, level, sender);
+						s.setLevel(level);
 					}
+					plugin.getOut().sendMessage(sender, "&aAdmin: &eset all skills for player &9" + name + "&e to &3" + level);
+					plugin.getDataManager().saveDwarfData(dCPlayer);
+				} else { 
+					skill.setLevel(level);
+					plugin.getOut().sendMessage(sender, "&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + level);
+					plugin.getDataManager().saveDwarfData(dCPlayer);
 				}
-				else setSkill(dCPlayer, name , skill, level, sender);
 			} catch (DCCommandException e) {
 				e.describe(sender);
 				sender.sendMessage(this.usageMessage);
@@ -82,17 +87,5 @@ public class CommandSetSkill extends Command {
 			}
 		}
 		return true;		
-	}
-
-	/**
-	 * Admin Command to change a player's skill. Syntax: /dc setskill <player>
-	 * <skill> <level> <player> is target, <skill> is skill ID or alpha <level>
-	 * is desired level in range 0-30
-	 */
-	private void setSkill(DCPlayer dCPlayer, String name, Skill skill, int skillLevel, CommandSender sender) {
-		skill.setLevel(skillLevel);
-		plugin.getOut().sendMessage(sender,
-				"&aAdmin: &eset skill &b" + skill.getDisplayName() + "&e for player &9" + name + "&e to &3" + skillLevel);
-		plugin.getDataManager().saveDwarfData(dCPlayer);
 	}
 }

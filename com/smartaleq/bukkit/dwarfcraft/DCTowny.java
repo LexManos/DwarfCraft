@@ -35,20 +35,16 @@ class DCTowny extends TownyPlayerListener {
 
 		if (owner instanceof Town) {
 			Town town = (Town) owner;
-			int available = getDCMaxTownBlocks(town)
-					- town.getTownBlocks().size();
+			int available = getDCMaxTownBlocks(town) - town.getTownBlocks().size();
 			townyPlugin.sendDebugMsg("Claim Check Available: " + available);
 			if (available - selection.size() < 0)
-				throw new TownyException(
-						"Not enough available town blocks to claim this selection.");
+				throw new TownyException("Not enough available town blocks to claim this selection.");
 		}
 
 		try {
 			int cost = blockCost * selection.size();
 			if (TownySettings.isUsingIConomy() && !owner.canPay(cost))
-				throw new TownyException("Town cannot afford to claim "
-						+ selection.size() + " town blocks costing " + cost
-						+ TownyIConomyObject.getIConomyCurrency());
+				throw new TownyException("Town cannot afford to claim " + selection.size() + " town blocks costing " + cost + TownyIConomyObject.getIConomyCurrency());
 		} catch (IConomyException e1) {
 			throw new TownyException("Iconomy Error");
 		}
@@ -58,17 +54,15 @@ class DCTowny extends TownyPlayerListener {
 		int residentTotal = 0;
 		int mayorMax = 5;
 		Resident mayor = town.getMayor();
-		DCPlayer mayorDwarf = dwarfCraftPlugin.getDataManager().findOffline(
-				mayor.getName());
+		DCPlayer mayorDwarf = dwarfCraftPlugin.getDataManager().findOffline(mayor.getName());
 		mayorMax = (int) mayorDwarf.getEffect(920).getEffectAmount(mayorDwarf);
 		List<Resident> residentList = town.getResidents();
 		for (Resident r : residentList) {
 			String residentName = r.getName();
-			DCPlayer dCPlayer = dwarfCraftPlugin.getDataManager().findOffline(
-					residentName);
+			DCPlayer dCPlayer = dwarfCraftPlugin.getDataManager().findOffline(residentName);
 			residentTotal += dCPlayer.getEffect(910).getEffectAmount(dCPlayer);
 		}
-		System.out.println("got town max blocks");
+		System.out.println("DC: got town max blocks");
 		return Math.min(Math.max(residentTotal, 5), mayorMax);
 	}
 }

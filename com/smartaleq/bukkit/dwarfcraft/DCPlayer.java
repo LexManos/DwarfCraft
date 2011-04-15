@@ -297,10 +297,10 @@ public class DCPlayer {
 	public int countArmorPieces(ArmorType type){
 		int count = 0;
 		PlayerInventory inv = this.getPlayer().getInventory();
-		if (type.ids.contains(inv.getHelmet().getTypeId())) count++;
+		if (type.ids.contains(inv.getHelmet().getTypeId()))     count++;
 		if (type.ids.contains(inv.getChestplate().getTypeId())) count++;
-		if (type.ids.contains(inv.getLeggings().getTypeId())) count++;
-		if (type.ids.contains(inv.getBoots().getTypeId())) count++;
+		if (type.ids.contains(inv.getLeggings().getTypeId()))   count++;
+		if (type.ids.contains(inv.getBoots().getTypeId()))      count++;
 		return count;
 	}
 	

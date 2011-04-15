@@ -33,7 +33,7 @@ public class NpcNetworkManager extends NetworkManager {
     }
 
     @Override
-    public void a(String paramString, Object[] paramArrayOfObject) {
+    public void a(String paramString, Object... paramArrayOfObject) {
     }
 
     @Override

@@ -7,7 +7,7 @@ public class DCCommandException extends Throwable {
 	public enum Type {
 		TOOFEWARGS("You did not provide enough arguments for that command"), 
 		TOOMANYARGS("You gave too many arguments for that command"), 
-		PARSEDWARFFAIL("Could not locate the %p you named"), 
+		PARSEDWARFFAIL("Could not locate the player you named"), 
 		PARSELEVELFAIL("Could not understand the skill level as a number"), 
 		PARSESKILLFAIL("Could not find the skill name or ID you provided"), 
 		PARSEEFFECTFAIL("Could not understand your effect input (Use an ID)"), 

@@ -58,7 +58,8 @@ public class NpcSpawner {
         return null;
     } 
 
-    public static BasicHumanNpc SpawnBasicHumanNpc(String uniqueId, String name, World world, double x, double y, double z, float yaw, float pitch) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static BasicHumanNpc SpawnBasicHumanNpc(String uniqueId, String name, World world, double x, double y, double z, float yaw, float pitch) {
         try {
             WorldServer ws = GetWorldServer(world);
             MinecraftServer ms = GetMinecraftServer(ws.getServer());

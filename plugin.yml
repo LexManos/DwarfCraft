@@ -74,8 +74,9 @@ commands:
     description: 
     usage: 
  createtrainer: 
-    description: 
-    usage:
+    description: Creates a new trainer where you are standing.
+    usage: |
+           /<command> <UniqueID> <DisplayName> <Skill ID or Skill Name> <Max Skill Level>
  removetrainer: 
     description: 
     usage:
