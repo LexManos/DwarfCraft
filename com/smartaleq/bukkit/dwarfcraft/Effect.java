@@ -174,7 +174,7 @@ public class Effect {
 		case EAT: 
 			description = String.format(
 					"&6You gain %s%.2f &6hearts (not &e%.2f&6) when you eat &2%s",
-					effectLevelColor, effectAmount, elfAmount, initiator);break;
+					effectLevelColor, effectAmount/2, elfAmount/2, initiator);break;
 		case CRAFT: 
 			description = String.format(
 					"&6You craft %s%.0f &2%s instead of &e%.0f",
