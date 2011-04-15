@@ -103,6 +103,9 @@ public class Util {
 			ItemStack item = contents[i];
 			int damage = item.getDurability();
 			int maxDamage = item.getType().getMaxDurability();
+			if (item.getTypeId() == 267){
+				maxDamage = 256; //hack to fix bug in craftbukkit
+			}
 			if (damage >= maxDamage && damage > 17 ) {
 				newContents[i] = null;
 				removedSomething = true;

@@ -187,9 +187,9 @@ public class DCEntityListener extends EntityListener {
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
 						
-						boolean brokentool = Util.toolChecker((Player) damager);
-						if (DwarfCraft.debugMessagesThreshold < 2)
-							System.out.println("DC2: sword broken after durability check:" + brokentool);
+						//boolean brokentool = Util.toolChecker((Player) damager);
+						//if (DwarfCraft.debugMessagesThreshold < 2)
+						//	System.out.println("DC2: sword broken after durability check:" + brokentool);
 					}
 				}
 				
@@ -233,7 +233,7 @@ public class DCEntityListener extends EntityListener {
 		}
 		double damage = event.getDamage();
 		double mitigation = 1;
-		
+
 		DCPlayer attackDwarf = null;
 		DCPlayer defendDwarf = null;
 		
@@ -249,10 +249,13 @@ public class DCEntityListener extends EntityListener {
 		
 		if(hitThing instanceof Player){
 			defendDwarf = plugin.getDataManager().find((Player)hitThing);
-			for (Skill skill : defendDwarf.getSkills().values()) {
-				for (Effect effect : skill.getEffects()) {
-					if (effect.getEffectType() == EffectType.BOWDEFEND) 
-						mitigation = armorMitigation(EffectType.BOWDEFEND, defendDwarf);
+			if (defendDwarf == null){ //its a NPC				
+			}else{
+				for (Skill skill : defendDwarf.getSkills().values()) {
+					for (Effect effect : skill.getEffects()) {
+						if (effect.getEffectType() == EffectType.BOWDEFEND) 
+							mitigation = armorMitigation(EffectType.BOWDEFEND, defendDwarf);
+					}
 				}
 			}
 		}
@@ -321,6 +324,7 @@ public class DCEntityListener extends EntityListener {
 			for (Skill skill : killer.getSkills().values()) {
 				for (Effect effect : skill.getEffects()) {
 					if (effect.getEffectType() == EffectType.MOBDROP) {
+						
 						if (
 								   (effect.getId() == 810 && (deadThing instanceof CraftPig))     //Animal Hunter
 								|| (effect.getId() == 811 && (deadThing instanceof CraftCow))

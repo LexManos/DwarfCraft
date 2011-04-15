@@ -209,39 +209,12 @@ final class ConfigManager {
 			Iterator<CSVRecord> records = csv.getRecords();
 			while(records.hasNext()){
 				CSVRecord item = records.next();
-				
-				int[] itools;
-				if (item.getString("Tools").isEmpty())
-					itools = new int[0];
-				else{
-					String[] stools = item.getString("Tools").split(" ");
-					itools = new int[stools.length];
-					for(int x = 0; x < stools.length; x++)
-						itools[x] = Integer.parseInt(stools[x]);
-				}
-				
-				Effect effect = new Effect(
-						item.getInt("ID"), 
-						item.getDouble("BaseValue"),
-						item.getDouble("LevelIncrease"), 
-						item.getDouble("LevelIncreaseNovice"),
-						item.getDouble("Min"), 
-						item.getDouble("Max"), 
-						item.getBool("Exception"), 
-						item.getInt("ExceptionLow"), 
-						item.getInt("ExceptionHigh"),
-						item.getDouble("ExceptionValue"),
-						item.getInt("NormalLevel"),
-						EffectType.getEffectType(item.getString("Type")),
-						item.getInt("OriginID"),
-						item.getInt("OutputID"),
-						item.getBool("RequireTool"),
-						itools);
-				
-				for (Race race:raceMap.values()){
+				Effect effect = new Effect(item);
+				for (Race race : raceMap.values()){
 					Skill skill = skillsArray.get(race).get(effect.getId()/10);
-					if(skill != null) 
+					if(skill != null) {
 						skill.getEffects().add(effect);
+					}
 				}
 			}			
 			return true;

@@ -1,51 +1,58 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
 import org.bukkit.Material;
+import org.jbls.LexManos.CSV.CSVRecord;
 
 public class Effect {
 
-	final private int id;
+	private int mID;
 
 	// effect value descriptors
-	final private double baseValue;
-	final private double levelUpMultiplier;
-	final private double noviceLevelUpMultiplier;
-	final private double minValue;
-	final private double maxValue;
-	final private boolean hasException;
-	final private double exceptionLow;
-	final private double exceptionHigh;
-	final private double exceptionValue;
+	private double     mBase;
+	private double     mLevelIncrease;
+	private double     mLevelIncreaseNovice;
+	private double     mMin;
+	private double     mMax;
+	private boolean    mException;
+	private double     mExceptionLow;
+	private double     mExceptionHigh;
+	private double     mExceptionValue;
+	private int        mNormalLevel;
+	private EffectType mType;
+	private int        mInitator;
+	private int        mOutput;
+	private boolean    mRequireTool;
+	private int[]      mTools;
+	private boolean    mFloorResult;
 
-	final private int elfEffectLevel;
-	final private EffectType effectType;
-	final private int initiatorId;
-	final private int outputId;
-	final private boolean toolRequired;
-	final private int[] tools;
-
-	public Effect(int id, double baseValue, double levelUpMultiplier,
-			double noviceLevelUpMultiplier, double minValue, double maxValue,
-			boolean hasException, double exceptionLow,
-			double exceptionHigh, double exceptionValue, int elfEffectLevel,
-			EffectType effectType, int initiatorId, int outputId,
-			boolean toolRequired, int[] tools) {
-		this.id = id;
-		this.baseValue = baseValue;
-		this.levelUpMultiplier = levelUpMultiplier;
-		this.noviceLevelUpMultiplier = noviceLevelUpMultiplier;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-		this.hasException = hasException;
-		this.exceptionLow = exceptionLow;
-		this.exceptionHigh = exceptionHigh;
-		this.exceptionValue = exceptionValue;
-		this.elfEffectLevel = elfEffectLevel;
-		this.effectType = effectType;
-		this.initiatorId = initiatorId;
-		this.outputId = outputId;
-		this.toolRequired = toolRequired;
-		this.tools = tools;
+	public Effect(CSVRecord record) {
+		if (record == null)
+			return;
+		mID                  = record.getInt("ID"); 
+		mBase                = record.getDouble("BaseValue");
+		mLevelIncrease       = record.getDouble("LevelIncrease"); 
+		mLevelIncreaseNovice = record.getDouble("LevelIncreaseNovice");
+		mMin                 = record.getDouble("Min"); 
+		mMax                 = record.getDouble("Max");
+		mException           = record.getBool("Exception"); 
+		mExceptionLow        = record.getInt("ExceptionLow"); 
+		mExceptionHigh       = record.getInt("ExceptionHigh");
+		mExceptionValue      = record.getDouble("ExceptionValue");
+		mNormalLevel         = record.getInt("NormalLevel");
+		mType                = EffectType.getEffectType(record.getString("Type"));
+		mInitator            = record.getInt("OriginID");
+		mOutput              = record.getInt("OutputID");
+		mRequireTool         = record.getBool("RequireTool");
+		mFloorResult         = record.getBool("Floor");
+		
+		if (record.getString("Tools").isEmpty())
+			mTools = new int[0];
+		else{
+			String[] stools = record.getString("Tools").split(" ");
+			mTools = new int[stools.length];
+			for(int x = 0; x < stools.length; x++)
+				mTools[x] = Integer.parseInt(stools[x]);
+		}
 	}
 
 	/**
@@ -55,23 +62,23 @@ public class Effect {
 	 */
 	protected String describeGeneral() {
 		String description;
-		String initiator = Material.getMaterial(initiatorId).toString();
+		String initiator = Material.getMaterial(mInitator).toString();
 		if (initiator.equalsIgnoreCase("AIR"))
 			initiator = "None";
-		String output = Material.getMaterial(outputId).toString();
+		String output = Material.getMaterial(mOutput).toString();
 		if (output.equalsIgnoreCase("AIR"))
 			output = "None";
 		double effectAmountLow = getEffectAmount(0);
 		double effectAmountHigh = getEffectAmount(30);
-		double elfAmount = getEffectAmount(elfEffectLevel);
+		double elfAmount = getEffectAmount(mNormalLevel);
 		String toolType = toolType();
 		description = String.format("Effect Block Trigger: %s Block Output: %s . "
 						+ "Effect value ranges from %.2f - %.2f for levels 0 to 30. "
 						+ "Elves have the effect %.2f , as if they were level %d . "
 						+ "Tools affected: %s. "
-						+ (toolRequired ? "Tool needed." : "Tool not needed."),
+						+ (mRequireTool ? "Tool needed." : "Tool not needed."),
 						initiator, output, effectAmountLow, effectAmountHigh,
-						elfAmount, elfEffectLevel, toolType);
+						elfAmount, mNormalLevel, toolType);
 
 		return description;
 	}
@@ -87,22 +94,22 @@ public class Effect {
 			return "Failed"; // TODO add failure code
 		String description = "no skill description";
 		// Variables used in skill descriptions
-		String initiator = Material.getMaterial(initiatorId).toString();
-		String output = Material.getMaterial(outputId).toString();
+		String initiator = Material.getMaterial(mInitator).name();
+		String output = Material.getMaterial(mOutput).name();
 		double effectAmount = getEffectAmount(dCPlayer);
-		double elfAmount = getEffectAmount(elfEffectLevel);
+		double elfAmount = getEffectAmount(mNormalLevel);
 		boolean moreThanOne = (effectAmount > 1);
 		String effectLevelColor = effectLevelColor(dCPlayer.getSkill(this)
 				.getLevel());
 		String toolType = toolType();
-		switch(effectType){
+		switch(mType){
 		case BLOCKDROP:
 			description = String.format(
 					"&6Break a &2%s &6and %s%.2f &2%s&6 are created",
 					initiator, effectLevelColor, effectAmount, output);
 			break;
 		case MOBDROP:
-			if (id == 850 || id == 851) {
+			if (mID == 850 || mID == 851) {
 				description = String.format(
 						"&6Zombies drop about %s%.2f &2%s",
 						effectLevelColor, effectAmount, output);break;
@@ -166,7 +173,7 @@ public class Effect {
 					toolType, effectLevelColor, effectAmount);break;
 		case EAT: 
 			description = String.format(
-					"&6You gain %s%.2f hearts (not &e%.2f) when you eat &2%s",
+					"&6You gain %s%.2f &6hearts (not &e%.2f&6) when you eat &2%s",
 					effectLevelColor, effectAmount, elfAmount, initiator);break;
 		case CRAFT: 
 			description = String.format(
@@ -180,7 +187,7 @@ public class Effect {
 			description = String.format(
 					"&a%.0f%%&6 of the time &2%s &6break &2%s &6instantly ",
 					effectAmount * 100, toolType,
-					Material.getMaterial(this.initiatorId).toString());break;
+					Material.getMaterial(this.mInitator).toString());break;
 		case BOWATTACK: 
 			description = String.format(
 					"&6Your Arrows do %s%.0f &6hp damage (half hearts)",
@@ -221,16 +228,16 @@ public class Effect {
 		case SPECIAL: 
 		default:
 			description = "&6This Effect description is not yet implemented: "
-					+ effectType.toString();
+					+ mType.toString();
 		}
 
 		return description;
 	}
 
 	private String effectLevelColor(int skillLevel) {
-		if (skillLevel > elfEffectLevel)
+		if (skillLevel > mNormalLevel)
 			return "&a";
-		else if (skillLevel == elfEffectLevel)
+		else if (skillLevel == mNormalLevel)
 			return "&e";
 		else
 			return "&c";
@@ -243,27 +250,7 @@ public class Effect {
 	 * @return
 	 */
 	public double getEffectAmount(DCPlayer dCPlayer) {
-		double effectAmount = baseValue;
-		int skillLevel;
-		skillLevel = dCPlayer.skillLevel(this.id / 10);
-		if (dCPlayer.isElf() || skillLevel == -1)
-			skillLevel = this.elfEffectLevel;
-		effectAmount += skillLevel * levelUpMultiplier;
-		effectAmount += Math.min(skillLevel, 5) * noviceLevelUpMultiplier;
-		effectAmount = Math.min(effectAmount, maxValue);
-		effectAmount = Math.max(effectAmount, minValue);
-		if (hasException && skillLevel <= exceptionHigh
-				&& skillLevel >= exceptionLow)
-			effectAmount = exceptionValue;
-		if (DwarfCraft.debugMessagesThreshold < 1)
-			System.out.println("DC1: GetEffectAmount Id: " + id
-					+ " level checked: " + skillLevel + " base: " + baseValue
-					+ " LevelUp multi:  " + levelUpMultiplier + " Novice:  "
-					+ noviceLevelUpMultiplier + " Max:  " + maxValue + " Min: "
-					+ minValue + " Exception: " + hasException + " ExcLow: "
-					+ exceptionLow + " ExcHigh: " + exceptionHigh
-					+ " Excvalue:  " + exceptionValue);
-		return effectAmount;
+		return getEffectAmount(dCPlayer.isElf() ? -1  : dCPlayer.skillLevel(this.mID / 10));
 	}
 
 	/**
@@ -271,50 +258,53 @@ public class Effect {
 	 * possible use getEffectAmount(Dwarf), which checks for Dwarf vs. Elf.
 	 */
 	private double getEffectAmount(int skillLevel) {
-		double effectAmount = baseValue;
-		effectAmount += skillLevel * levelUpMultiplier;
-		effectAmount += Math.min(skillLevel, 5) * noviceLevelUpMultiplier;
-		effectAmount = Math.min(effectAmount, maxValue);
-		effectAmount = Math.max(effectAmount, minValue);
-		if (hasException && skillLevel <= exceptionHigh
-				&& skillLevel >= exceptionLow)
-			effectAmount = exceptionValue;
-		if (DwarfCraft.debugMessagesThreshold < 1)
-			System.out.println("DC1: GetEffectAmount Id: " + id + " base: "
-					+ baseValue + " LevelUp multi:  " + levelUpMultiplier
-					+ " Novice:  " + noviceLevelUpMultiplier + " Max:  "
-					+ maxValue + " Min: " + minValue + " Exception: "
-					+ hasException + " ExcLow: " + exceptionLow + " ExcHigh: "
-					+ exceptionHigh + " Excvalue:  " + exceptionValue);
-		return effectAmount;
+		double effectAmount = mBase;
+		if (skillLevel == -1)
+			skillLevel = mNormalLevel;
+		effectAmount += skillLevel * mLevelIncrease;
+		effectAmount += Math.min(skillLevel, 5) * mLevelIncreaseNovice;
+		effectAmount = Math.min(effectAmount, mMax);
+		effectAmount = Math.max(effectAmount, mMin);
+		
+		if (mException && skillLevel <= mExceptionHigh
+				&& skillLevel >= mExceptionLow)
+			effectAmount = mExceptionValue;
+		
+		if (DwarfCraft.debugMessagesThreshold < 1){
+			System.out.println(String.format("DC1: GetEffectAmmount ID: %d Level: %d Base: %.2f Increase: %.2f Novice: %.2f Max: %.2f Min: %.2f " +
+					"Exception: %s Exctpion Low: %.2f Exception High: %.2f Exception Value: %.2f Floor Result: %s",
+					mID, skillLevel, mBase, mLevelIncrease, mLevelIncreaseNovice, mMax, mMin, 
+					mException, mExceptionLow, mExceptionHigh, mExceptionValue, mFloorResult));
+		}
+		return (mFloorResult ? Math.floor(effectAmount) : effectAmount);
 	}
 
 	public EffectType getEffectType() {
-		return effectType;
+		return mType;
 	}
 
 	protected int getElfEffectLevel() {
-		return elfEffectLevel;
+		return mNormalLevel;
 	}
 
 	public int getId() {
-		return id;
+		return mID;
 	}
 
 	public int getInitiatorId() {
-		return initiatorId;
+		return mInitator;
 	}
 
 	public int getOutputId() {
-		return outputId;
+		return mOutput;
 	}
 
 	public boolean getToolRequired() {
-		return toolRequired;
+		return mRequireTool;
 	}
 
 	public int[] getTools() {
-		return tools;
+		return mTools;
 	}
 
 	/**
@@ -323,7 +313,7 @@ public class Effect {
 	 * @return
 	 */
 	private String toolType() {
-		for (int toolId : tools) {
+		for (int toolId : mTools) {
 			if (toolId == 267)
 				return "swords";
 			if (toolId == 292)
@@ -343,7 +333,7 @@ public class Effect {
 	}
 	
 	public boolean checkTool(int toolID){
-		for (int id : tools)
+		for (int id : mTools)
 			if (id == toolID)
 				return true;
 		return false;
@@ -351,7 +341,7 @@ public class Effect {
 
 	@Override
 	public String toString() {
-		return Integer.toString(id);
+		return Integer.toString(mID);
 	}
 
 }

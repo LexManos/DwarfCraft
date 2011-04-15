@@ -96,7 +96,13 @@ public class DCPlayerListener extends PlayerListener {
 								if (DwarfCraft.debugMessagesThreshold < 3)
 									System.out.println("DC3: affected durability of a hoe - new:" + item.getDurability());
 								
-								Util.toolChecker(player);
+								//Util.toolChecker(player);
+								if (item.getDurability() >= item.getType().getMaxDurability())
+								{
+									System.out.println("Broke da hoe!");
+									player.setItemInHand(null);
+								}
+								
 								block.setTypeId(60);
 							}
 						}

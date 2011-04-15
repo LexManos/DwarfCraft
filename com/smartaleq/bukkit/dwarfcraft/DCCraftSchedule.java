@@ -4,7 +4,6 @@ import net.minecraft.server.CraftingManager;
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.ItemStack;
 
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import net.minecraft.server.ContainerWorkbench;
 
@@ -49,8 +48,6 @@ public class DCCraftSchedule implements Runnable {
 				for (Effect e : s.getEffects()) {
 					if (e.getEffectType() == EffectType.CRAFT && materialId == e.getOutputId() && damage == e.getInitiatorId()) {
 						int count = (int) e.getEffectAmount(dCPlayer);
-						System.out.println(String.format("Crafting %s -> %s %d", Material.getMaterial(e.getOutputId()), 
-								Material.getMaterial(e.getInitiatorId()), count));
 						if (count == 0)
 							outputStack = null;
 						else
