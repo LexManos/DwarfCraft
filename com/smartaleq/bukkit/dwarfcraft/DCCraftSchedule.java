@@ -6,12 +6,12 @@ import net.minecraft.server.ItemStack;
 
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import net.minecraft.server.ContainerWorkbench;
+import net.minecraft.server.ContainerPlayer;
 
 public class DCCraftSchedule implements Runnable {
 	private final DCPlayer dCPlayer;
 	private final DwarfCraft plugin;
 	private final EntityPlayer entityPlayer;
-	private ContainerWorkbench workBench;
 	private int taskID;
 
 	public DCCraftSchedule(DwarfCraft newPlugin, DCPlayer newDwarf) {
@@ -33,14 +33,17 @@ public class DCCraftSchedule implements Runnable {
 			kill();
 			return;
 		}
-		if (!(entityPlayer.activeContainer instanceof ContainerWorkbench)){
+		ItemStack outputStack = null;
+		if (entityPlayer.activeContainer instanceof ContainerPlayer){
+			ContainerPlayer player = (ContainerPlayer)(entityPlayer.activeContainer);
+			outputStack = CraftingManager.a().a(player.a);
+		}else if (entityPlayer.activeContainer instanceof ContainerWorkbench){
+			ContainerWorkbench workBench = (ContainerWorkbench)(entityPlayer.activeContainer);
+			outputStack = CraftingManager.a().a(workBench.a);
+		}else {
 			kill();
 			return;
 		}
-		
-		workBench = (ContainerWorkbench) (entityPlayer.activeContainer);
-		ItemStack outputStack = CraftingManager.a().a(workBench.a);
-		
 		if (outputStack != null) {
 			int materialId = outputStack.id;
 			int damage = outputStack.damage;
@@ -59,8 +62,13 @@ public class DCCraftSchedule implements Runnable {
 						// is.getMaxStackSize()
 					}
 				}
-				workBench.b.a(0, outputStack); // set the output stack on the
-												// crafting bench
+				if (entityPlayer.activeContainer instanceof ContainerPlayer){
+					ContainerPlayer player = (ContainerPlayer)(entityPlayer.activeContainer);
+					player.b.a(0, outputStack);
+				}else if (entityPlayer.activeContainer instanceof ContainerWorkbench){
+					ContainerWorkbench workBench = (ContainerWorkbench)(entityPlayer.activeContainer);
+					workBench.b.a(0, outputStack);
+				}
 			}
 		}
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new DCCraftSchedule(plugin, dCPlayer), 2);

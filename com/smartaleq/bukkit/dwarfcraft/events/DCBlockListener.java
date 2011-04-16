@@ -84,7 +84,12 @@ public class DCBlockListener extends BlockListener {
 						// doesn't take special durability damage
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a tool - new:" + tool.getDurability());
-						//Util.toolChecker(player);
+						
+						if (tool.getDurability() >= tool.getType().getMaxDurability()){
+							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
+								continue;
+							player.setItemInHand(null);
+						}
 					}
 				}
 				if (tool != null){
@@ -96,10 +101,12 @@ public class DCBlockListener extends BlockListener {
 						
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
-						
-						boolean brokentool = Util.toolChecker(player);
-						if (DwarfCraft.debugMessagesThreshold < 2)
-							System.out.println("DC2: sword broken after durability check:" + brokentool);
+
+						if (tool.getDurability() >= tool.getType().getMaxDurability()){
+							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
+								continue;
+							player.setItemInHand(null);
+						}
 					}
 				}
 			}
@@ -153,4 +160,6 @@ public class DCBlockListener extends BlockListener {
 			}
 		}
 	}
+	
+
 }

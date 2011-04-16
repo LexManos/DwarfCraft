@@ -119,7 +119,7 @@ public class Effect {
 					output, effectLevelColor, effectAmount, output);break;
 		case SWORDDURABILITY: 
 			description = String.format(
-					"&6DISABLED*** Using &2%s &6removes about %s%.2f &6durability",
+					"&6Using &2%s &6removes about %s%.2f &6durability",
 					toolType, effectLevelColor, effectAmount);break;
 		case PVPDAMAGE: 
 			description = String.format(

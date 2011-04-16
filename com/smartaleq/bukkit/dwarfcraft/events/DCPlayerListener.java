@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
@@ -96,12 +97,8 @@ public class DCPlayerListener extends PlayerListener {
 								if (DwarfCraft.debugMessagesThreshold < 3)
 									System.out.println("DC3: affected durability of a hoe - new:" + item.getDurability());
 								
-								//Util.toolChecker(player);
 								if (item.getDurability() >= item.getType().getMaxDurability())
-								{
-									System.out.println("Broke da hoe!");
 									player.setItemInHand(null);
-								}
 								
 								block.setTypeId(60);
 							}
@@ -137,4 +134,17 @@ public class DCPlayerListener extends PlayerListener {
 			}
 		}
 	}
+	
+	/**
+     * Called when a player opens an inventory
+     *
+     * @param event Relevant event details
+     */
+	@Override
+    public void onInventoryOpen(PlayerInventoryEvent event) {
+		System.out.println("Inventory open");
+		DCCraftSchedule sched = new DCCraftSchedule(plugin, plugin.getDataManager().find(event.getPlayer()));
+		int id = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, sched, 0, 2);
+		sched.setID(id);
+    }
 }

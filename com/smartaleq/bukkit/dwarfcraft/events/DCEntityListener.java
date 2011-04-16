@@ -186,10 +186,12 @@ public class DCEntityListener extends EntityListener {
 						
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
-						
-						//boolean brokentool = Util.toolChecker((Player) damager);
-						//if (DwarfCraft.debugMessagesThreshold < 2)
-						//	System.out.println("DC2: sword broken after durability check:" + brokentool);
+
+						if (tool.getDurability() >= tool.getType().getMaxDurability()){
+							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
+								continue;
+							attacker.getPlayer().setItemInHand(null);
+						}
 					}
 				}
 				

@@ -281,8 +281,6 @@ public class DataManager {
 				Skill skill = dCPlayer.getSkill(skillID);
 				if (skill != null){
 					skill.setLevel(level);
-					if(DwarfCraft.debugMessagesThreshold < 2)
-						System.out.println(String.format("DC3:\t%s:\t\t\t%d", skill.getDisplayName(), skill.getLevel()));
 				}
 			}
 			rs.close();
