@@ -34,6 +34,8 @@ final class ConfigManager {
 	private Race optOutRace;
 	private HashMap<String, Race> raceMap = new HashMap<String, Race>();
 	
+	public boolean sendGreeting = false;
+	
 	protected ConfigManager(DwarfCraft plugin, String directory,
 			String paramsFileName) {
 		this.plugin = plugin;
@@ -181,13 +183,9 @@ final class ConfigManager {
 					dbpath = theline[1].trim();
 				if (theline[0].equalsIgnoreCase("Debug Level"))
 					DwarfCraft.debugMessagesThreshold = Integer.parseInt(theline[1].trim());
-				/*if (theline[0].equalsIgnoreCase("Default Race")){
-					defaultRace = new Race(theline[1].trim());
-					raceMap.put(defaultRace.getName(), defaultRace);}
-				if (theline[0].equalsIgnoreCase("Default Race")){
-					optOutRace = new Race(theline[1].trim());
-					raceMap.put(optOutRace.getName(), optOutRace);}
-					*/
+				if (theline[0].equalsIgnoreCase("Send Login Greet"))
+					sendGreeting = Boolean.parseBoolean(theline[1].trim());
+				
 				line = br.readLine();
 			}
 			defaultRace = new Race("Dwarf");

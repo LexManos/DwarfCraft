@@ -30,10 +30,7 @@ public class CommandEffectInfo extends Command {
 		} else if (args[0].equalsIgnoreCase("?")) {
 			plugin.getOut().sendMessage(sender, getUsage());
 		}else{
-			try{
-				if (!(sender.isOp()))
-					throw new DCCommandException(plugin, Type.NEEDPERMISSIONS);
-				
+			try{				
 				CommandParser parser = new CommandParser(plugin, sender, args);
 				List<Object> desiredArguments = new ArrayList<Object>();
 				List<Object> outputList = null;

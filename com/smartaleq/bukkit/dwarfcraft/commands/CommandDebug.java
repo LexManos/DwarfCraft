@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import com.smartaleq.bukkit.dwarfcraft.CommandParser;
 import com.smartaleq.bukkit.dwarfcraft.DCCommandException;
 import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
-import com.smartaleq.bukkit.dwarfcraft.DCCommandException.Type;
 
 public class CommandDebug extends Command {
 	private final DwarfCraft plugin;
@@ -32,10 +31,7 @@ public class CommandDebug extends Command {
 	
 				if (DwarfCraft.debugMessagesThreshold < 1)
 					System.out.println("DC1: started command 'debug'");
-				
-				if (!sender.isOp())
-					throw new DCCommandException(plugin, Type.NEEDPERMISSIONS);
-				
+								
 				Integer i = 0;
 				desiredArguments.add(i);
 				outputList = parser.parse(desiredArguments, false);

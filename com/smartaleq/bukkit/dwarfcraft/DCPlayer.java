@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -91,35 +90,6 @@ public class DCPlayer {
 					highCount++;
 		}
 		return highCount;
-	}
-
-	/**
-	 * Counts items in a dwarf's inventory
-	 * 
-	 * @param itemId
-	 * @return total item count int
-	 */
-	protected int countItem(int itemId) {
-		int itemCount = 0;
-		ItemStack[] items = player.getInventory().getContents();
-		for (ItemStack item : items) {
-			if (item == null)
-				continue;
-			if (item.getTypeId() == itemId) {
-				itemCount += item.getAmount();
-			}
-		}
-		return itemCount;
-	}
-
-	/**
-	 * Counts items in a dwarf's inventory
-	 * 
-	 * @param material
-	 * @return total item count int
-	 */
-	protected int countItem(Material material) {
-		return countItem(material.getId());
 	}
 
 	/**
@@ -247,39 +217,6 @@ public class DCPlayer {
 	}
 
 	/**
-	 * Removes a set number of items from an inventory No error checking, should
-	 * only be used if the items have already been counted
-	 * 
-	 * @param itemId
-	 * @param amount
-	 */
-	
-	protected void removeInventoryItems(int itemId, int amount) {
-		Inventory inventory = player.getInventory();
-		ItemStack[] contents = inventory.getContents();
-		ItemStack[] newcontents = contents.clone();
-		int amountLeft = amount;
-		for (int i = 0; i < 40; i++) {
-			if (contents[i] == null)
-				continue;
-			ItemStack item = contents[i];
-			if (item.getTypeId() == itemId) {
-				if (item.getAmount() > amountLeft) {
-					newcontents[i].setAmount(item.getAmount() - amountLeft);
-					break;
-				} else if (item.getAmount() == amountLeft) {
-					newcontents[i] = null;
-					break;
-				} else {
-					amountLeft = amountLeft - item.getAmount();
-					newcontents[i] = null;
-				}
-			}
-		}
-		player.getInventory().setContents(newcontents);
-	}
-
-	/**
 	 * @param skills
 	 *            the skills to set
 	 */
@@ -316,8 +253,8 @@ public class DCPlayer {
 	}
 
 	public enum ArmorType{
-		IRON (Arrays.asList(306,307,308,309)),
-		GOLD (Arrays.asList(314,315,316,317)),
+		IRON    (Arrays.asList(306,307,308,309)),
+		GOLD    (Arrays.asList(314,315,316,317)),
 		LEATHER (Arrays.asList(298,299,300,301)),
 		DIAMOND (Arrays.asList(310,311,312,313));
 		

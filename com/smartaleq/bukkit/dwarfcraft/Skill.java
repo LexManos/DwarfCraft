@@ -6,28 +6,28 @@ import org.bukkit.Material;
 
 public class Skill implements Cloneable {
 
-	private final int id;
-	private final String displayName;
-	private int level;
-	private final List<Effect> effects;
-	private final Material trainerHeldMaterial;
-	public final TrainingItem Item1;
-	public final TrainingItem Item2;
-	public final TrainingItem Item3;
+	private final int          mID;
+	private final String       mName;
+	private int                mLevel;
+	private final List<Effect> mEffects;
+	private final Material     mHeldItem;
+	public final TrainingItem  Item1;
+	public final TrainingItem  Item2;
+	public final TrainingItem  Item3;
 
 	public Skill(int id, String displayName, int level, List<Effect> effects, 
 			TrainingItem item1, TrainingItem item2, TrainingItem item3,
 			Material trainerHeldMaterial) {
-		this.id = id;
-		this.displayName = displayName;
+		mID = id;
+		mName = displayName;
 		
 		Item1 = item1;
 		Item2 = item2;
 		Item3 = item3;
 
-		this.level = level;
-		this.effects = effects;
-		this.trainerHeldMaterial = trainerHeldMaterial;
+		mLevel = level;
+		mEffects = effects;
+		mHeldItem = trainerHeldMaterial;
 	}
 
 	/**
@@ -39,37 +39,36 @@ public class Skill implements Cloneable {
 	 */
 	@Override
 	public Skill clone() {
-		Skill newSkill = new Skill(this.id, this.displayName, this.level,
-				this.effects, Item1, Item2, Item3, this.trainerHeldMaterial);
+		Skill newSkill = new Skill(mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem);
 		return newSkill;
 	}
 
 	public String getDisplayName() {
-		return displayName;
+		return mName;
 	}
 
 	public List<Effect> getEffects() {
-		return effects;
+		return mEffects;
 	}
 
 	public int getId() {
-		return id;
+		return mID;
 	}
 
 	protected int getLevel() {
-		return level;
+		return mLevel;
 	}
 
 	protected Material getTrainerHeldMaterial() {
-		return trainerHeldMaterial;
+		return mHeldItem;
 	}
 
 	public void setLevel(int newLevel) {
-		level = newLevel;
+		mLevel = newLevel;
 	}
 
 	@Override
 	public String toString() {
-		return displayName.toUpperCase().replaceAll(" ", "_");
+		return mName.toUpperCase().replaceAll(" ", "_");
 	}
 }

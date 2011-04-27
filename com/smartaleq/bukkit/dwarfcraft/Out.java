@@ -193,12 +193,12 @@ public class Out {
 		String words[] = message.split(" ");
 		String lastColor = "";
 		int lineTotal = 0;
+		
 		for (String word : words) {
 			if (Util.msgLength(currentLine) + Util.msgLength(word) <= messageSectionLength) {
 				currentLine = currentLine.concat(word + " ");
 			} else {
-				player.sendMessage(prefix.concat(lastColor + currentLine)
-						.trim());
+				player.sendMessage(prefix.concat(lastColor + currentLine).trim());
 				lineTotal++;
 				if (lineTotal >= maxLines)
 					return lastColor;
@@ -280,11 +280,9 @@ public class Out {
 			// each skill should take 30 characters - no more, no less
 			String interim;
 			if (s.getLevel() < 10)
-				interim = String.format("&6[&30%d&6] &b%.18s", s.getLevel(),
-						s.getDisplayName());
+				interim = String.format("&6[&30%d&6] &b%.18s", s.getLevel(), s.getDisplayName());
 			else
-				interim = String.format("&6[&3%d&6] &b%.18s", s.getLevel(),
-						s.getDisplayName());
+				interim = String.format("&6[&3%d&6] &b%.18s", s.getLevel(), s.getDisplayName());
 
 			if (!odd) {
 				int interimLen = Util.msgLength(interim);
@@ -482,7 +480,8 @@ public class Out {
 	 */
 	public void welcome(Server server, DCPlayer dCPlayer) {
 		try {
-			sendBroadcast(server, "&fWelcome, &9" + dCPlayer.getRace().getName() + " &6" + dCPlayer.getPlayer().getName(), "&6[DC]         ");
+			if (plugin.getConfigManager().sendGreeting)
+				sendBroadcast(server, "&fWelcome, &9" + dCPlayer.getRace().getName() + " &6" + dCPlayer.getPlayer().getName(), "&6[DC]         ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

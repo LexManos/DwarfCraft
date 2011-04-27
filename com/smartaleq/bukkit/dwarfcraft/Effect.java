@@ -314,20 +314,13 @@ public class Effect {
 	 */
 	private String toolType() {
 		for (int toolId : mTools) {
-			if (toolId == 267)
-				return "swords";
-			if (toolId == 292)
-				return "hoes";
-			if (toolId == 258)
-				return "axes";
-			if (toolId == 270)
-				return "pickaxes";
-			if (toolId == 257)
-				return "most picks";
-			if (toolId == 278)
-				return "high picks";
-			if (toolId == 256)
-				return "shovels";
+			if (toolId == 267) return "swords";
+			if (toolId == 292) return "hoes";
+			if (toolId == 258) return "axes";
+			if (toolId == 270) return "pickaxes";
+			if (toolId == 257) return "most picks";
+			if (toolId == 278) return "high picks";
+			if (toolId == 256) return "shovels";
 		}
 		return "any tool";
 	}
