@@ -1,8 +1,8 @@
 name: DwarfCraft
 description: A skills and progression plugin for character development in RPG worlds.
-author: smartaleq and RCarretta
+author: LexManos, smartaleq and RCarretta
 main: com.smartaleq.bukkit.dwarfcraft.DwarfCraft
-version: 1.05 
+version: 1.06
 commands: 
  debug: 
     description: Sets the debug message threshold in console, from -10(everthing) to +10(critical only).
