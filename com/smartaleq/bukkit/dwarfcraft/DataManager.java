@@ -19,8 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.Material;
 import org.bukkit.entity.Vehicle;
 
-import redecouverte.npcspawner.NpcSpawner;
-
 public class DataManager {
 
 	private List<DCPlayer>                  dwarves = new ArrayList<DCPlayer>();
@@ -414,7 +412,9 @@ public class DataManager {
 	public void removeTrainer(String str) {
 		DwarfTrainer d;
 		d = trainerList.remove(str);
-		NpcSpawner.RemoveBasicHumanNpc(d.getBasicHumanNpc());
+		//NpcSpawner.RemoveBasicHumanNpc(d.getBasicHumanNpc());
+		plugin.getNPCManager().despawnById(d.getUniqueId());
+		System.out.println("Despawning trainer: " + d.getUniqueId());
 
 		try {
 			PreparedStatement prep = mDBCon.prepareStatement("DELETE FROM trainers WHERE uniqueId = ?;");

@@ -2,7 +2,7 @@ name: DwarfCraft
 description: A skills and progression plugin for character development in RPG worlds.
 author: smartaleq and RCarretta
 main: com.smartaleq.bukkit.dwarfcraft.DwarfCraft
-version: 1.03 
+version: 1.05 
 commands: 
  debug: 
     description: Sets the debug message threshold in console, from -10(everthing) to +10(critical only).
@@ -77,6 +77,7 @@ commands:
     description: Creates a new trainer where you are standing.
     usage: |
            /<command> <UniqueID> <DisplayName> <Skill ID or Skill Name> <Max Skill Level>
+    aliases: [ct]
  removetrainer: 
     description: 
     usage:

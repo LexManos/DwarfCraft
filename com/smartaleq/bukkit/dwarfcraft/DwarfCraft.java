@@ -10,6 +10,8 @@ import org.bukkit.plugin.PluginManager;
 import com.smartaleq.bukkit.dwarfcraft.events.*;
 import com.smartaleq.bukkit.dwarfcraft.commands.*;
 
+import org.martin.bukkit.npclib.*;
+
 /**
  * 
  * DwarfCraft is a RPG-like plugin for minecraft (via Bukkit) that allows
@@ -36,6 +38,7 @@ public class DwarfCraft extends JavaPlugin {
 	private ConfigManager cm;
 	private DataManager dm;
 	private Out out;
+	private NPCManager npcm;
 	
 	public static int debugMessagesThreshold = 10;
 
@@ -45,6 +48,9 @@ public class DwarfCraft extends JavaPlugin {
 
 	public DataManager getDataManager() {
 		return dm;
+	}
+	public NPCManager getNPCManager(){
+		return npcm;
 	}
 
 	// TODO: deprecate this, there has to be a better way - move Out to Dwarf?
@@ -111,6 +117,7 @@ public class DwarfCraft extends JavaPlugin {
 		pm.registerEvent(Event.Type.CHUNK_UNLOAD,    worldListener,   Priority.Low,     this);
 		pm.registerEvent(Event.Type.WORLD_LOAD,      worldListener,   Priority.Low,     this);
 
+		npcm = new NPCManager(this);
 		cm = new ConfigManager(this, getDataFolder().getAbsolutePath(), "DwarfCraft.config");
 		dm = new DataManager(this, cm);
 		out = new Out(this);
@@ -121,7 +128,6 @@ public class DwarfCraft extends JavaPlugin {
 			System.out.println("[SEVERE] Failed to read DwarfCraft Greeter Messages)");
 			getServer().getPluginManager().disablePlugin(this);
 		}
-
 
 		System.out.println(getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!");
 	}

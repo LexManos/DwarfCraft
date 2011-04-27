@@ -1,15 +1,34 @@
-package redecouverte.npcspawner;
+package org.martin.bukkit.npclib;
 
-import net.minecraft.server.*;
+import net.minecraft.server.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.NetServerHandler;
+import net.minecraft.server.NetworkManager;
+import net.minecraft.server.Packet;
+import net.minecraft.server.Packet101CloseWindow;
+import net.minecraft.server.Packet102WindowClick;
+import net.minecraft.server.Packet106Transaction;
+import net.minecraft.server.Packet10Flying;
+import net.minecraft.server.Packet130UpdateSign;
+import net.minecraft.server.Packet14BlockDig;
+import net.minecraft.server.Packet15Place;
+import net.minecraft.server.Packet16BlockItemSwitch;
+import net.minecraft.server.Packet18ArmAnimation;
+import net.minecraft.server.Packet19EntityAction;
+import net.minecraft.server.Packet255KickDisconnect;
+import net.minecraft.server.Packet3Chat;
+import net.minecraft.server.Packet7UseEntity;
+import net.minecraft.server.Packet9Respawn;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 
-public class NpcNetHandler extends NetServerHandler 
-{
+/**
+ *
+ * @author martin
+ */
+public class NPCNetHandler extends NetServerHandler {
 
-    public NpcNetHandler(MinecraftServer minecraftserver, EntityPlayer entityplayer, NetworkManager netMgr) {
-        super(minecraftserver, netMgr, entityplayer);
-        netMgr.a(this);
-
+    public NPCNetHandler(MinecraftServer minecraftserver, NetworkManager networkmanager, EntityPlayer entityplayer) {
+        super(minecraftserver, networkmanager, entityplayer);
     }
 
     @Override
@@ -22,11 +41,11 @@ public class NpcNetHandler extends NetServerHandler
     }
 
     @Override
-    public void a(String s) {
+    public void a(Packet10Flying packet10flying) {
     }
 
     @Override
-    public void a(Packet10Flying packet10flying) {
+    public void sendMessage(String s) {
     }
 
     @Override
@@ -50,10 +69,6 @@ public class NpcNetHandler extends NetServerHandler
     }
 
     @Override
-    public void b(Packet packet) {
-    }
-
-    @Override
     public void a(Packet16BlockItemSwitch packet16blockitemswitch) {
     }
 
@@ -74,17 +89,7 @@ public class NpcNetHandler extends NetServerHandler
     }
 
     @Override
-    public int b() {
-        return 0;
-    }
-
-    @Override
-    public void b(String s) {
-    }
-
-    @Override
-    public String c() {
-        return "";
+    public void sendPacket(Packet packet) {
     }
 
     @Override
@@ -105,6 +110,11 @@ public class NpcNetHandler extends NetServerHandler
 
     @Override
     public void a(Packet106Transaction packet106transaction) {
+    }
+
+    @Override
+    public int b() {
+        return super.b();
     }
 
     @Override

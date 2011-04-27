@@ -10,20 +10,23 @@ import org.bukkit.entity.Entity;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import redecouverte.npcspawner.*;
+//import redecouverte.npcspawner.*;
+import org.martin.bukkit.npclib.*;
 
 public final class DwarfTrainer {
 	// protected static BasicHumanNpcList HumanNpcList;
-	private BasicHumanNpc basicHumanNpc;
+	private NPCEntity basicHumanNpc;
 	private Integer skillId;
 	private Integer maxSkill;
 	private boolean greeter;
 	private String messageId;
 	private World world;
 	private ItemStack itemStack;
-	private double x, y, z;
-	private float yaw, pitch;
-	private String basicNpcUniqueId, basicNpcName;
+	//private double x, y, z;
+	//private float yaw, pitch;
+	//private String basicNpcUniqueId, 
+	private String basicNpcName;
+	private String mID;
 	private final DwarfCraft plugin;
 
 	// constructor only for *trainers*
@@ -36,27 +39,19 @@ public final class DwarfTrainer {
 		this.messageId = greeterMessage;
 		greeter = isGreeter;
 		world = location.getWorld();
-		x = location.getX();
-		y = location.getY();
-		z = location.getZ();
-		yaw = location.getYaw();
-		pitch = location.getPitch();
-		basicNpcUniqueId = uniqueId;
 		basicNpcName = name;
+		mID = uniqueId;
 
-		basicHumanNpc = NpcSpawner.SpawnBasicHumanNpc(basicNpcUniqueId, basicNpcName, world, x, y, z, yaw, pitch);
+		basicHumanNpc = plugin.getNPCManager().spawnNPC(basicNpcName, location, uniqueId);
 
 		Material material;
 		if (greeter)
 			material = Material.AIR;
 		else
-			material = plugin.getConfigManager().getGenericSkill(skillId)
-					.getTrainerHeldMaterial();
+			material = plugin.getConfigManager().getGenericSkill(skillId).getTrainerHeldMaterial();
 		assert (material != null);
-		if (material != Material.AIR) {
-			itemStack = new ItemStack(material.getId(), 1, (short)0);
-			basicHumanNpc.getBukkitEntity().setItemInHand(itemStack);
-		}
+		if (material != Material.AIR)
+			basicHumanNpc.setItemInHand(material);
 	}
 
 	// only used by DB
@@ -72,24 +67,18 @@ public final class DwarfTrainer {
 		maxSkill = newMaxSkill;
 		greeter = newIsGreeter;
 		messageId = newGreeterMessage;
-		x = newX;
-		y = newY;
-		z = newZ;
-		yaw = newYaw;
-		pitch = newPitch;
-		basicNpcUniqueId = newUniqueId;
 		basicNpcName = newName;
-		basicHumanNpc = NpcSpawner.SpawnBasicHumanNpc(newUniqueId, newName,
-				newWorld, newX, newY, newZ, newYaw, newPitch);
+		mID = newUniqueId;
+		
+		//basicHumanNpc = NpcSpawner.SpawnBasicHumanNpc(newUniqueId, newName, newWorld, newX, newY, newZ, newYaw, newPitch);
+		basicHumanNpc = plugin.getNPCManager().spawnNPC(basicNpcName, new Location(newWorld, newX, newY, newZ, newYaw, newPitch), newUniqueId);
 		//experimental likely to mess stuff up
 		((Player) basicHumanNpc.getBukkitEntity()).setSneaking(true);
 		
 		Material material = newMaterial;
 		assert (material != null);
-		if (material != Material.AIR) {
-			itemStack = new ItemStack(material.getId(), 1, (short)0);
-			basicHumanNpc.getBukkitEntity().setItemInHand(itemStack);
-		}
+		if (material != Material.AIR) 
+			basicHumanNpc.setItemInHand(material);
 	}
 
 	@Override
@@ -105,7 +94,7 @@ public final class DwarfTrainer {
 		return false;
 	}
 
-	public BasicHumanNpc getBasicHumanNpc() {
+	public NPCEntity getBasicHumanNpc() {
 		return basicHumanNpc;
 	}
 
@@ -137,7 +126,7 @@ public final class DwarfTrainer {
 	}
 
 	public String getUniqueId() {
-		return basicHumanNpc.getUniqueId();
+		return mID;
 	}
 
 	protected World getWorld() {
@@ -165,14 +154,13 @@ public final class DwarfTrainer {
 	}
 
 	public void printLeftClick(Player player) {
-		GreeterMessage msg = plugin.getDataManager().getGreeterMessage(
-				messageId);
+		GreeterMessage msg = plugin.getDataManager().getGreeterMessage(messageId);
 		if (msg != null) {
 			plugin.getOut().sendMessage(player, msg.getLeftClickMessage());
 		} else {
 			System.out
 					.println("[DC] Error: Greeter "
-							+ basicHumanNpc.getUniqueId()
+							+ getUniqueId()
 							+ " has no left click message. Check your configuration file for message ID "
 							+ messageId);
 		}

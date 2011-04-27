@@ -23,8 +23,9 @@ import com.smartaleq.bukkit.dwarfcraft.Skill;
 import com.smartaleq.bukkit.dwarfcraft.Util;
 import com.smartaleq.bukkit.dwarfcraft.DCPlayer.ArmorType;
 
-import redecouverte.npcspawner.NpcEntityTargetEvent;
-import redecouverte.npcspawner.NpcEntityTargetEvent.NpcTargetReason;
+
+import org.martin.bukkit.npclib.*;
+import org.martin.bukkit.npclib.NpcEntityTargetEvent.NpcTargetReason;
 
 public class DCEntityListener extends EntityListener {
 	private final DwarfCraft plugin;
@@ -84,16 +85,17 @@ public class DCEntityListener extends EntityListener {
 				if (plugin.getDataManager().getTrainerRemove().contains(event.getDamager())){
 					plugin.getDataManager().removeTrainer(trainer.getUniqueId());
 					plugin.getDataManager().getTrainerRemove().remove(event.getDamager());
-				}
-				// in business, left click
-				if (trainer.isGreeter()) {
-					trainer.printLeftClick((Player) (event.getDamager()));
-				} else {
-					trainer.lookAt(event.getDamager());
-					Player   player   = (Player)event.getDamager();
-					DCPlayer dCPlayer = plugin.getDataManager().find(player);
-					Skill    skill    = dCPlayer.getSkill(trainer.getSkillTrained());
-					plugin.getOut().printSkillInfo(player, skill, dCPlayer, trainer.getMaxSkill());
+				}else{
+					//in business, left click
+					if (trainer.isGreeter()) {
+						trainer.printLeftClick((Player) (event.getDamager()));
+					} else {
+						trainer.lookAt(event.getDamager());
+						Player   player   = (Player)event.getDamager();
+						DCPlayer dCPlayer = plugin.getDataManager().find(player);
+						Skill    skill    = dCPlayer.getSkill(trainer.getSkillTrained());
+						plugin.getOut().printSkillInfo(player, skill, dCPlayer, trainer.getMaxSkill());
+					}
 				}
 			}
 			return true;

@@ -64,10 +64,10 @@ public class DCCraftSchedule implements Runnable {
 				}
 				if (entityPlayer.activeContainer instanceof ContainerPlayer){
 					ContainerPlayer player = (ContainerPlayer)(entityPlayer.activeContainer);
-					player.b.a(0, outputStack);
+					player.b.setItem(0, outputStack);
 				}else if (entityPlayer.activeContainer instanceof ContainerWorkbench){
 					ContainerWorkbench workBench = (ContainerWorkbench)(entityPlayer.activeContainer);
-					workBench.b.a(0, outputStack);
+					workBench.b.setItem(0, outputStack);
 				}
 			}
 		}
