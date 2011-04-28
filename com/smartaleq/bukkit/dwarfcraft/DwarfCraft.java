@@ -2,7 +2,6 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 import java.util.List;
 
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -165,14 +164,12 @@ public class DwarfCraft extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 		}
 		
-		for(World world : getServer().getWorlds()){
-			for(Player player : world.getPlayers()){
-				DCPlayer dCPlayer = getDataManager().find(player);
-				if (dCPlayer == null) 
-					dCPlayer = getDataManager().createDwarf(player);
-				if (!getDataManager().getDwarfData(dCPlayer)) 
-					getDataManager().createDwarfData(dCPlayer);
-			}
+		for(Player player : getServer().getOnlinePlayers()){
+			DCPlayer dCPlayer = getDataManager().find(player);
+			if (dCPlayer == null) 
+				dCPlayer = getDataManager().createDwarf(player);
+			if (!getDataManager().getDwarfData(dCPlayer)) 
+				getDataManager().createDwarfData(dCPlayer);
 		}
 
 		System.out.println(getDescription().getName() + " version " + getDescription().getVersion() + " is enabled!");
