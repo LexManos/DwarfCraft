@@ -36,7 +36,6 @@ public class DCBlockListener extends BlockListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled())
 			return;
-		
 		Player player = event.getPlayer();		
 		DCPlayer dCPlayer = plugin.getDataManager().find(player);
 		HashMap<Integer, Skill> skills = dCPlayer.getSkills();

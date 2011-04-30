@@ -98,9 +98,11 @@ public class DwarfCraft extends JavaPlugin {
 		else if(hasOp && name.equalsIgnoreCase("SetSkill"))      cmd = new CommandSetSkill(this);
 		else if(hasOp && name.equalsIgnoreCase("CreateGreeter")) cmd = new CommandCreateGreeter(this);
 		else if(hasOp && name.equalsIgnoreCase("CreateTrainer")) cmd = new CommandCreateTrainer(this);
+		
+		else if(hasOp && name.equalsIgnoreCase("DMem"))          cmd = new CommandDMem(this);
 			
 		if (cmd == null){
-			sender.sendMessage("&4You do not have permission to use that.");
+			sender.sendMessage("§4You do not have permission to use that.");
 			return false;
 		}
 		return cmd.execute(sender, commandLabel, args);

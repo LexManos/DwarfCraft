@@ -37,9 +37,10 @@ public class NPCEntity extends EntityPlayer {
             }
         });
         this.netServerHandler = new NPCNetHandler(minecraftserver, netMgr, this);
-        this.lastTargetId = -1;
-        this.lastBounceId = -1;
-        this.lastBounceTick = 0;
+        this.lastTargetId     = -1;
+        this.lastBounceId     = -1;
+        this.lastBounceTick   = 0;
+        this.fauxSleeping     = true;
     }
 
     public void animateArmSwing() {
