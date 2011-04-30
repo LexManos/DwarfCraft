@@ -213,52 +213,44 @@ public class Out {
 
 	public boolean printSkillInfo(CommandSender sender, Skill skill, DCPlayer dCPlayer, int maxTrainLevel) {
 		// general line
-		sendMessage(
-				sender,
-				"&6  Skillinfo for &b" + skill.getDisplayName() + "&6 [&b"
-						+ skill.getId() + "&6] || Your level &3"
-						+ skill.getLevel());
+		sendMessage(sender, String.format("&6  Skillinfo for &b%s&6 [&b%d&6] || Your level &3%d/%d", 
+						skill.getDisplayName(), skill.getId(), skill.getLevel(), maxTrainLevel));
+		
 		// effects lines
 		sendMessage(sender, "&6[&5EffectID&6]&f------&6[Effect]&f------");
 		for (Effect effect : skill.getEffects()) {
 			if (effect != null)
-				sendMessage(sender, effect.describeLevel(dCPlayer), "&6[&5"
-						+ effect.getId() + "&6] ");
+				sendMessage(sender, effect.describeLevel(dCPlayer), String.format("&6[&5%d&6] ", effect.getId()));
 		}
+		
 		// training lines
 		if (skill.getLevel() == 30) {
-			sendMessage(sender,
-					"&6---This skill is maximum level, no training available---");
+			sendMessage(sender, "&6---This skill is maximum level, no training available---");
 			return true;
 		}
+		
 		if (skill.getLevel() > maxTrainLevel) {
-			sendMessage(sender,
-					"&6---You're as skilled as me, you need a more advanced trainer!--");
+			sendMessage(sender, "&6---You're as skilled as me, you need a more advanced trainer!--");
 			return true;
 		}
-		sendMessage(sender, "&6---Train costs for level &3"
-				+ (skill.getLevel() + 1));
+		
+		sendMessage(sender, String.format("&6---Train costs for level &3%d", (skill.getLevel() + 1)));		
 		List<ItemStack> costs = dCPlayer.calculateTrainingCost(skill);
 		for (ItemStack item : costs) {
 			if (item != null)
-				sendMessage(sender,
-						" &2" + item.getAmount() + " " + item.getType()
-								+ "&6  --", " &6-- ");
+				sendMessage(sender, String.format(" &2%d %s&6  --", item.getAmount(), item.getType()), " &6-- ");
 		}
 		return true;
 	}
 
-	public void printSkillSheet(DCPlayer dCPlayer, CommandSender sender,
-			String displayName, boolean printFull) {
+	public void printSkillSheet(DCPlayer dCPlayer, CommandSender sender, String displayName, boolean printFull) {
 		String message1;
 		String message2 = "";
 		String prefix1 = "&6[&dSS&6] ";
 
 		String prefix2 = "&6[&dSS&6] ";
-		message1 = ("&6Printing Skill Sheet for &9"
-				+ (displayName == null ? dCPlayer.getPlayer().getName()
-						: displayName) + " Dwarf &6Level is &3" + dCPlayer
-				.getDwarfLevel());
+		message1 = ("&6Printing Skill Sheet for &9" + (displayName == null ? dCPlayer.getPlayer().getName()
+						: displayName) + " Dwarf &6Level is &3" + dCPlayer.getDwarfLevel());
 		sendMessage(sender, message1, prefix1);
 
 		if (dCPlayer.isElf()) {
@@ -278,11 +270,7 @@ public class Out {
 			// the goal here is for every skill sheet line to be 60 characters
 			// long.
 			// each skill should take 30 characters - no more, no less
-			String interim;
-			if (s.getLevel() < 10)
-				interim = String.format("&6[&30%d&6] &b%.18s", s.getLevel(), s.getDisplayName());
-			else
-				interim = String.format("&6[&3%d&6] &b%.18s", s.getLevel(), s.getDisplayName());
+			String interim = String.format("&6[&3%02d&6] &b%.18s", s.getLevel(), s.getDisplayName());
 
 			if (!odd) {
 				int interimLen = Util.msgLength(interim);
