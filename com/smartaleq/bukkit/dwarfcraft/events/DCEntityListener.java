@@ -5,24 +5,13 @@ import java.util.List;
 
 import org.bukkit.craftbukkit.entity.*;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByProjectileEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 
-import com.smartaleq.bukkit.dwarfcraft.DCPlayer;
-import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
-import com.smartaleq.bukkit.dwarfcraft.DwarfTrainer;
-import com.smartaleq.bukkit.dwarfcraft.Effect;
-import com.smartaleq.bukkit.dwarfcraft.EffectType;
-import com.smartaleq.bukkit.dwarfcraft.Skill;
-import com.smartaleq.bukkit.dwarfcraft.Util;
+import com.smartaleq.bukkit.dwarfcraft.*;
 import com.smartaleq.bukkit.dwarfcraft.DCPlayer.ArmorType;
-
 
 import org.martin.bukkit.npclib.*;
 import org.martin.bukkit.npclib.NpcEntityTargetEvent.NpcTargetReason;
@@ -365,7 +354,13 @@ public class DCEntityListener extends EntityListener {
 			checkDwarfTrainer((NpcEntityTargetEvent) event);
 			event.setCancelled(true);
 		}
-		return;
+		if (event.getReason() == TargetReason.CLOSEST_PLAYER){
+			if (event.getTarget() instanceof CraftPlayer){
+				if (((CraftPlayer)event.getTarget()).getHandle().netServerHandler instanceof NPCNetHandler){
+					event.setCancelled(true);
+				}
+			}			
+		}
 	}
 
 	protected double armorMitigation(EffectType type, DCPlayer defendDwarf ){
