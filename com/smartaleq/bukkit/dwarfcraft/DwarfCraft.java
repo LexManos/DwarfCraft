@@ -137,6 +137,7 @@ public class DwarfCraft extends JavaPlugin {
 		pm.registerEvent(Event.Type.ENTITY_DEATH,    entityListener,  Priority.Low,     this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK,     blockListener,   Priority.Highest, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE,    blockListener,   Priority.Normal,  this);
+		pm.registerEvent(Event.Type.BLOCK_PHYSICS,   blockListener,   Priority.Normal,  this);
 		pm.registerEvent(Event.Type.VEHICLE_ENTER,   vehicleListener, Priority.Normal,  this);
 		pm.registerEvent(Event.Type.VEHICLE_EXIT,    vehicleListener, Priority.Normal,  this);
 		pm.registerEvent(Event.Type.VEHICLE_DAMAGE,  vehicleListener, Priority.Normal,  this);

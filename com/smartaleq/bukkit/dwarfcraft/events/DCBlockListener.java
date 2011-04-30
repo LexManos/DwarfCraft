@@ -1,11 +1,14 @@
 package com.smartaleq.bukkit.dwarfcraft.events;
 
 import java.util.HashMap;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.smartaleq.bukkit.dwarfcraft.DCPlayer;
@@ -158,6 +161,12 @@ public class DCBlockListener extends BlockListener {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void onBlockPhysics(BlockPhysicsEvent event){
+		if (event.getBlock().getType() == Material.CACTUS && plugin.getConfigManager().disableCacti)
+			event.setCancelled(true);
 	}
 	
 

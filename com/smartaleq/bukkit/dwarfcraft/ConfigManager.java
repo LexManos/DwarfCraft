@@ -35,6 +35,7 @@ public final class ConfigManager {
 	private HashMap<String, Race> raceMap = new HashMap<String, Race>();
 	
 	public boolean sendGreeting = false;
+	public boolean disableCacti = true;
 	
 	protected ConfigManager(DwarfCraft plugin, String directory,
 			String paramsFileName) {
@@ -185,6 +186,9 @@ public final class ConfigManager {
 					DwarfCraft.debugMessagesThreshold = Integer.parseInt(theline[1].trim());
 				if (theline[0].equalsIgnoreCase("Send Login Greet"))
 					sendGreeting = Boolean.parseBoolean(theline[1].trim());
+				if (theline[0].equalsIgnoreCase("Disable Cacti Farms"))
+					disableCacti = Boolean.parseBoolean(theline[1].trim());
+					
 				
 				line = br.readLine();
 			}
