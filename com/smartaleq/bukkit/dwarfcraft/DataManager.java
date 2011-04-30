@@ -300,7 +300,7 @@ public class DataManager {
 		for (Iterator<Map.Entry<String, DwarfTrainer>> i = trainerList.entrySet().iterator(); i.hasNext();) {
 			Map.Entry<String, DwarfTrainer> pairs = i.next();
 			DwarfTrainer trainer = (pairs.getValue());
-			if (trainer.getBasicHumanNpc().getBukkitEntity().getEntityId() == entity.getEntityId())
+			if (trainer.getEntity().getBukkitEntity().getEntityId() == entity.getEntityId())
 				return trainer;
 		}
 		return null;

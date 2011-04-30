@@ -2,13 +2,13 @@ package com.smartaleq.bukkit.dwarfcraft;
 
 public class Race {
 	
-	private final String name;
+	private final String mName;
 		
 	public Race(String name){
-		this.name = name;
+		mName = name;
 	}
 
 	public String getName() {
-		return name;
+		return mName;
 	}
 }

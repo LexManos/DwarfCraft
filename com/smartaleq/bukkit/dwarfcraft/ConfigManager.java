@@ -14,7 +14,7 @@ import org.bukkit.Material;
 import org.jbls.LexManos.CSV.CSVReader;
 import org.jbls.LexManos.CSV.CSVRecord;
 
-final class ConfigManager {
+public final class ConfigManager {
 
 	private final DwarfCraft plugin;
 
@@ -59,7 +59,7 @@ final class ConfigManager {
 	}
 
 	
-	protected HashMap<Integer, Skill> getAllSkills() {
+	public HashMap<Integer, Skill> getAllSkills() {
 		HashMap<Integer, Skill> newSkillsArray = new HashMap<Integer,Skill>();
 		for(Race r:raceMap.values()){
 			for (Skill s : skillsArray.get(r).values()) {
@@ -70,7 +70,7 @@ final class ConfigManager {
 		return newSkillsArray;
 	}
 	
-	protected HashMap<Integer, Skill> getAllSkills(Race race) {
+	public HashMap<Integer, Skill> getAllSkills(Race race) {
 		HashMap<Integer, Skill> newSkillsArray = new HashMap<Integer, Skill>();
 		HashMap<Integer, Skill> raceList = skillsArray.get(race); 
 		for (Skill s : raceList.values()) {

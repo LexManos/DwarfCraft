@@ -115,7 +115,7 @@ public class DCEntityListener extends EntityListener {
 							trainer.printRightClick((Player) (event.getTarget()));
 						} else {
 							trainer.lookAt(event.getTarget());
-							trainer.getBasicHumanNpc().animateArmSwing();
+							trainer.getEntity().animateArmSwing();
 							trainer.trainSkill(dCPlayer);
 						}
 					} else if (event.getNpcReason() == NpcTargetReason.NPC_BOUNCED) {

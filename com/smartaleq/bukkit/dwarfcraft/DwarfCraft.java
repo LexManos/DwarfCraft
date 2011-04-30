@@ -49,7 +49,7 @@ public class DwarfCraft extends JavaPlugin {
 	
 	public static int debugMessagesThreshold = 10;
 
-	protected ConfigManager getConfigManager() {
+	public ConfigManager getConfigManager() {
 		return cm;
 	}
 

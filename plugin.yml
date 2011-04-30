@@ -83,13 +83,14 @@ commands:
     usage:
     aliases: [removegreeter]
  listtrainers: 
-    description: 
-    usage:
-    aliases: [listtrainer]
+    description: Displays a list of trainers and greeters on the server.
+    usage: |
+           /<command> [PageNumber]
+    aliases: [listtrainer, lt]
  removenext: 
     description: 
     usage: 
  dmem: 
-    description: 
-    usage: 
-
+    description: Displays a list of what type, and how many entites are loaded on the server.
+    usage: |
+           /dmem

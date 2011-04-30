@@ -59,11 +59,11 @@ public final class DwarfTrainer {
 		return false;
 	}
 
-	public NPCEntity getBasicHumanNpc() {
+	public NPCEntity getEntity() {
 		return mEntity;
 	}
 
-	protected Location getLocation() {
+	public Location getLocation() {
 		return mEntity.getBukkitEntity().getLocation();
 	}
 
@@ -82,7 +82,7 @@ public final class DwarfTrainer {
 		return mMsgID;
 	}
 
-	protected String getName() {
+	public String getName() {
 		return mEntity.getName();
 	}
 

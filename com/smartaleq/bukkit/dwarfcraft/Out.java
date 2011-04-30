@@ -1,8 +1,6 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -302,35 +300,6 @@ public class Out {
 			sendMessage(sender, untrainedSkills, prefix2);
 	}
 
-	public void printTrainerList(CommandSender sender) {
-		if (plugin.getDataManager().trainerList.isEmpty()) {
-			sendMessage(sender, "There are currently no trainers.");
-		} else {
-			for (Iterator<Map.Entry<String, DwarfTrainer>> i = plugin
-					.getDataManager().trainerList.entrySet().iterator(); i
-					.hasNext();) {
-				Map.Entry<String, DwarfTrainer> pairs = i.next();
-				DwarfTrainer d = (DwarfTrainer) (pairs.getValue());
-				if (d.isGreeter()) {
-					sendMessage(sender, "Greeter ID: " + d.getUniqueId()
-							+ " Name: " + d.getName());
-				} else {
-					String skillName = null;
-					for (Skill s : plugin.getConfigManager().getAllSkills().values())
-						if (s.getId() == d.getSkillTrained())
-							skillName = s.getDisplayName();
-					sendMessage(
-							sender,
-							"Trainer ID: " + d.getUniqueId() + " Name: "
-									+ d.getName() + " Trains: ("
-									+ d.getSkillTrained() + ") " + skillName);
-				}
-			}
-		}
-	}
-
-
-
 	public void rules(CommandSender sender) {
 		sendMessage(sender, Messages.ServerRules, "&6[&dRules&6] ");
 	}
@@ -362,8 +331,7 @@ public class Out {
 	 * 
 	 * @return
 	 */
-	protected void sendMessage(CommandSender sender, String message,
-			String prefix) {
+	protected void sendMessage(CommandSender sender, String message, String prefix) {
 		if (sender instanceof Player) {
 			message = parseColors(message);
 			prefix = parseColors(prefix);
