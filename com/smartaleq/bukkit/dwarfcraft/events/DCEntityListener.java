@@ -169,7 +169,7 @@ public class DCEntityListener extends EntityListener {
 		for (Skill s : skills.values()) {
 			for (Effect e : s.getEffects()) {
 				if (tool != null){
-					if (e.getEffectType() == EffectType.SWORDDURABILITY && (e.checkTool(toolId) || !e.getToolRequired())) {
+					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(toolId)) {
 						if (DwarfCraft.debugMessagesThreshold < 2)
 							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + e.getId());
 						
@@ -186,7 +186,7 @@ public class DCEntityListener extends EntityListener {
 					}
 				}
 				
-				if (e.getEffectType() == EffectType.PVEDAMAGE && !isPVP && (e.checkTool(toolId) || !e.getToolRequired())) {
+				if (e.getEffectType() == EffectType.PVEDAMAGE && !isPVP && e.checkTool(toolId)) {
 						if (hp <= 0) {
 							event.setCancelled(true);
 							return;
@@ -202,7 +202,7 @@ public class DCEntityListener extends EntityListener {
 									event.getDamage(), damage, hp, e.getId()));
 						}
 				}
-				if (e.getEffectType() == EffectType.PVPDAMAGE && isPVP && (e.checkTool(toolId) || !e.getToolRequired())) {
+				if (e.getEffectType() == EffectType.PVPDAMAGE && isPVP && e.checkTool(toolId)) {
 					damage = Util.randomAmount((e.getEffectAmount(attacker)) * damage);
 					event.setDamage(damage);
 					if (DwarfCraft.debugMessagesThreshold < 6){
@@ -291,7 +291,7 @@ public class DCEntityListener extends EntityListener {
 							System.out.println("DC1: Damage less than fall threshold");
 						event.setCancelled(true);
 					}
-				}				
+				}				  
 			}
 		}
 		if (DwarfCraft.debugMessagesThreshold < 1){
@@ -339,8 +339,7 @@ public class DCEntityListener extends EntityListener {
 									deadThing.getClass().getSimpleName(), effect.getId(), count, 
 									org.bukkit.Material.getMaterial(effect.getOutputId()).name()));
 							}
-							items.add(new ItemStack(effect.getOutputId(),
-									Util.randomAmount(effect.getEffectAmount(killer)), (short)0, (byte)0));
+							items.add(effect.getOutput());
 						}
 					}
 				}

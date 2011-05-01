@@ -84,11 +84,11 @@ public class DCPlayerListener extends PlayerListener {
 			Location loc = block.getLocation();
 			Material material = block.getType();
 			for (Skill s : skills.values()) {
-				for (Effect e : s.getEffects()) {
-					if (e.getEffectType() == EffectType.PLOWDURABILITY) {
-						for (int id : e.getTools()) {
+				for (Effect effect : s.getEffects()) {
+					if (effect.getEffectType() == EffectType.PLOWDURABILITY) {
+						for (int id : effect.getTools()) {
 							if (id == itemId && (material == Material.DIRT || material == Material.GRASS)) {
-								double effectAmount = e.getEffectAmount(dCPlayer);
+								double effectAmount = effect.getEffectAmount(dCPlayer);
 								if (DwarfCraft.debugMessagesThreshold < 3)
 									System.out.println("DC2: affected durability of a hoe - old:" + durability);
 								
@@ -104,13 +104,18 @@ public class DCPlayerListener extends PlayerListener {
 							}
 						}
 					}
-					if (e.getEffectType() == EffectType.PLOW) {
-						for (int id : e.getTools()) {
+					if (effect.getEffectType() == EffectType.PLOW) {
+						for (int id : effect.getTools()) {
 							if (id == itemId && material == Material.GRASS) {
 								loc.setY(loc.getY()+1);
-								Util.dropBlockEffect(loc, e, e.getEffectAmount(dCPlayer), true, (byte) 0);
-								if (DwarfCraft.debugMessagesThreshold < 3)
-									System.out.println("DC3: hoed some ground:" + e.getEffectAmount(dCPlayer));
+
+								ItemStack output = effect.getOutput(dCPlayer);
+								
+								if (DwarfCraft.debugMessagesThreshold < 6)
+									System.out.println("Debug: Hoed some ground, dropped " + output.toString());
+								
+								if (output.getAmount() != 0)
+									loc.getWorld().dropItemNaturally(loc, output);
 							}
 						}
 					}

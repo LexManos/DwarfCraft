@@ -53,14 +53,14 @@ public class DCBlockListener extends BlockListener {
 			durability = tool.getDurability();
 		}
 		
-		Location loc = event.getBlock().getLocation();
+		Location loc    = event.getBlock().getLocation();
 		int materialId = event.getBlock().getTypeId();
-		byte meta = event.getBlock().getData();
+		byte meta      = event.getBlock().getData();
 
 		boolean blockDropChange = false;
 		for (Skill s : skills.values()) {
 			for (Effect effect : s.getEffects()) {
-				if (effect.getEffectType() == EffectType.BLOCKDROP && effect.getInitiatorId() == materialId) {
+				if (effect.getEffectType() == EffectType.BLOCKDROP && effect.checkInitiator(materialId, meta)) {
 					
 					// Crops special line:
 					if (effect.getInitiatorId() == 59){
@@ -71,11 +71,19 @@ public class DCBlockListener extends BlockListener {
 					if (DwarfCraft.debugMessagesThreshold < 4)
 						System.out.println("DC4: Effect: " + effect.getId() + " tool: " + toolId + " and toolRequired: " + effect.getToolRequired());
 					
-					if (effect.checkTool(toolId) || !effect.getToolRequired()) {
-						Util.dropBlockEffect(loc, effect, effect.getEffectAmount(dCPlayer), true, meta);
+					if (effect.checkTool(toolId)) {
+						ItemStack item = effect.getOutput(dCPlayer, meta);
+						
+						if (DwarfCraft.debugMessagesThreshold < 6)
+							System.out.println("Debug: dropped " + item.toString());
+						
+						if (item.getAmount() != 0)
+							loc.getWorld().dropItemNaturally(loc, item);
+						
 						blockDropChange = true;
 					}
 				}
+				
 				if (effect.getEffectType() == EffectType.TOOLDURABILITY && durability != -1) {
 					if (effect.checkTool(toolId)) {
 						double effectAmount = effect.getEffectAmount(dCPlayer);
@@ -96,7 +104,7 @@ public class DCBlockListener extends BlockListener {
 					}
 				}
 				if (tool != null){
-					if (effect.getEffectType() == EffectType.SWORDDURABILITY && (effect.checkTool(toolId) || !effect.getToolRequired())) {
+					if (effect.getEffectType() == EffectType.SWORDDURABILITY && effect.checkTool(toolId)) {
 						if (DwarfCraft.debugMessagesThreshold < 2)
 							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + effect.getId());
 						
@@ -140,17 +148,18 @@ public class DCBlockListener extends BlockListener {
 		if (tool != null) 
 			toolId = tool.getTypeId();
 		int materialId = event.getBlock().getTypeId();
+		byte data = event.getBlock().getData();
 		
 		//if (event.getDamageLevel() != BlockDamageLevel.STARTED)
 		//	return;
 				
 		for (Skill s : skills.values()) {
 			for (Effect e : s.getEffects()) {
-				if (e.getEffectType() == EffectType.DIGTIME && e.getInitiatorId() == materialId) {
+				if (e.getEffectType() == EffectType.DIGTIME && e.checkInitiator(materialId, data)) {
 					if (DwarfCraft.debugMessagesThreshold < 2)
 						System.out.println("DC2: started instamine check");
 					
-					if (e.checkTool(toolId) || !e.getToolRequired()) {
+					if (e.checkTool(toolId)) {
 						if (Util.randomAmount(e.getEffectAmount(dCPlayer)) == 0)
 							return;
 						
@@ -223,11 +232,12 @@ public class DCBlockListener extends BlockListener {
 			case REDSTONE_TORCH_ON:
 			case REDSTONE_TORCH_OFF:
 			case SNOW:	
+			case POWERED_RAIL:
+			case DETECTOR_RAIL:
 				return false;
+			default:
+				return true;
 		}
-		if (block.getId() == 27 || block.getId() == 28) //Booster/detector tracks. Bukkit has no material for them yet
-			return false;
-		return true;
 	}
 	
 

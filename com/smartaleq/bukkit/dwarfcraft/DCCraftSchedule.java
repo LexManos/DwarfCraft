@@ -49,12 +49,17 @@ public class DCCraftSchedule implements Runnable {
 			int damage = outputStack.damage;
 			for (Skill s : dCPlayer.getSkills().values()) {
 				for (Effect e : s.getEffects()) {
-					if (e.getEffectType() == EffectType.CRAFT && materialId == e.getOutputId() && damage == e.getInitiatorId()) {
-						int count = (int) e.getEffectAmount(dCPlayer);
-						if (count == 0)
+					if (e.getEffectType() == EffectType.CRAFT && e.checkInitiator(materialId, (byte)damage)){
+						
+						org.bukkit.inventory.ItemStack output = e.getOutput(dCPlayer, (byte)damage);
+
+						if (output.getAmount() == 0)
 							outputStack = null;
-						else
-							outputStack.count = count;
+						else{
+							outputStack.count = output.getAmount();
+							if (output.getData() != null)
+								outputStack.damage = output.getData().getData();
+						}
 						// TODO: need code to check max stack size and if amount
 						// created > max stack size drop all count above 1 to
 						// ground/inventory.
@@ -75,8 +80,5 @@ public class DCCraftSchedule implements Runnable {
 	}
 	public void kill() {
 		plugin.getServer().getScheduler().cancelTask(taskID);
-		//int index = PlayerListen.tasks.indexOf(id);
-		//if (index != -1)
-		//	PlayerListen.tasks.remove(PlayerListen.tasks.indexOf(id));
 	}
 }

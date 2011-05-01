@@ -1,13 +1,10 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
 public class Effect {
-
-	private int mID;
-
-	// effect value descriptors
+	private int        mID;
 	private double     mBase;
 	private double     mLevelIncrease;
 	private double     mLevelIncreaseNovice;
@@ -19,8 +16,8 @@ public class Effect {
 	private double     mExceptionValue;
 	private int        mNormalLevel;
 	private EffectType mType;
-	private int        mInitator;
-	private int        mOutput;
+	private ItemStack  mInitator;
+	private ItemStack  mOutput;
 	private boolean    mRequireTool;
 	private int[]      mTools;
 	private boolean    mFloorResult;
@@ -40,10 +37,11 @@ public class Effect {
 		mExceptionValue      = record.getDouble("ExceptionValue");
 		mNormalLevel         = record.getInt("NormalLevel");
 		mType                = EffectType.getEffectType(record.getString("Type"));
-		mInitator            = record.getInt("OriginID");
-		mOutput              = record.getInt("OutputID");
+		mInitator            = Util.parseItem(record.getString("OriginID"));
+		mOutput              = Util.parseItem(record.getString("OutputID"));
 		mRequireTool         = record.getBool("RequireTool");
 		mFloorResult         = record.getBool("Floor");
+		
 		
 		if (record.getString("Tools").isEmpty())
 			mTools = new int[0];
@@ -62,10 +60,10 @@ public class Effect {
 	 */
 	protected String describeGeneral() {
 		String description;
-		String initiator = Material.getMaterial(mInitator).toString();
+		String initiator = Util.getCleanName(mInitator);
 		if (initiator.equalsIgnoreCase("AIR"))
 			initiator = "None";
-		String output = Material.getMaterial(mOutput).toString();
+		String output = Util.getCleanName(mOutput);
 		if (output.equalsIgnoreCase("AIR"))
 			output = "None";
 		double effectAmountLow = getEffectAmount(0);
@@ -92,16 +90,18 @@ public class Effect {
 	protected String describeLevel(DCPlayer dCPlayer) {
 		if (dCPlayer == null)
 			return "Failed"; // TODO add failure code
+		
 		String description = "no skill description";
 		// Variables used in skill descriptions
-		String initiator = Material.getMaterial(mInitator).name();
-		String output = Material.getMaterial(mOutput).name();
+		String initiator = Util.getCleanName(mInitator);
+		String output    = Util.getCleanName(mOutput);
+		
 		double effectAmount = getEffectAmount(dCPlayer);
 		double elfAmount = getEffectAmount(mNormalLevel);
 		boolean moreThanOne = (effectAmount > 1);
-		String effectLevelColor = effectLevelColor(dCPlayer.getSkill(this)
-				.getLevel());
+		String effectLevelColor = effectLevelColor(dCPlayer.getSkill(this).getLevel());
 		String toolType = toolType();
+		
 		switch(mType){
 		case BLOCKDROP:
 			description = String.format(
@@ -177,7 +177,7 @@ public class Effect {
 					effectLevelColor, effectAmount/2, elfAmount/2, initiator);break;
 		case CRAFT: 
 			description = String.format(
-					"&6You craft %s%.0f &2%s instead of &e%.0f",
+					"&6You craft %s%.0f &2%s &6instead of &e%.0f",
 					effectLevelColor, effectAmount, output, elfAmount);break;
 		case PLOW: 
 			description = String.format(
@@ -186,8 +186,8 @@ public class Effect {
 		case DIGTIME: 
 			description = String.format(
 					"&a%.0f%%&6 of the time &2%s &6break &2%s &6instantly ",
-					effectAmount * 100, toolType,
-					Material.getMaterial(this.mInitator).toString());break;
+					effectAmount * 100, toolType, initiator);
+			break;
 		case BOWATTACK: 
 			description = String.format(
 					"&6Your Arrows do %s%.0f &6hp damage (half hearts)",
@@ -292,11 +292,27 @@ public class Effect {
 	}
 
 	public int getInitiatorId() {
-		return mInitator;
+		return mInitator.getTypeId();
 	}
 
 	public int getOutputId() {
+		return mOutput.getTypeId();
+	}
+	public ItemStack getOutput(){
 		return mOutput;
+	}
+	public ItemStack getOutput(DCPlayer player){
+		return getOutput(player, null);
+	}
+	public ItemStack getOutput(DCPlayer player, Byte oldData){
+		Byte data = (mOutput.getData() == null ? null : mOutput.getData().getData());
+
+		if (data == -1)
+			data = oldData;
+		
+		int count = Util.randomAmount(getEffectAmount(player));
+		
+		return new ItemStack(mOutput.getTypeId(), count, (short)0, data);
 	}
 
 	public boolean getToolRequired() {
@@ -305,6 +321,18 @@ public class Effect {
 
 	public int[] getTools() {
 		return mTools;
+	}
+	
+	public boolean checkInitiator(int id, byte data){
+		if (mInitator.getTypeId() != id)
+			return false;
+		
+		if (mInitator.getData() != null){
+			if (mInitator.getData().getData() == -1) //-1 means we dont care.
+				return true;
+			return mInitator.getData().getData() == data;
+		}
+		return true;
 	}
 
 	/**
@@ -329,7 +357,7 @@ public class Effect {
 		for (int id : mTools)
 			if (id == toolID)
 				return true;
-		return false;
+		return !mRequireTool;
 	}
 
 	@Override
