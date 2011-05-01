@@ -128,7 +128,6 @@ public class DwarfCraft extends JavaPlugin {
 
 		pm.registerEvent(Event.Type.PLAYER_CHAT,     playerListener,  Priority.Normal,  this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN,     playerListener,  Priority.Normal,  this);
-		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener,  Priority.Low,     this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT,     playerListener,  Priority.Low,     this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener,  Priority.Normal,  this);
 		pm.registerEvent(Event.Type.INVENTORY_OPEN,  playerListener,  Priority.Normal,  this);		

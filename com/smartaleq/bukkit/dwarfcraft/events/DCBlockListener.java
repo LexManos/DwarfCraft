@@ -176,7 +176,7 @@ public class DCBlockListener extends BlockListener {
 				
 				Material base = world.getBlockAt(loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ()).getType();
 				if ((base != Material.CACTUS) && (base != Material.SAND))
-					world.dropItemNaturally(loc, new ItemStack(Material.CACTUS));
+					world.dropItemNaturally(loc, new ItemStack(Material.CACTUS, 1));
 					
 			}
 		}

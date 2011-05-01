@@ -127,8 +127,13 @@ public class DCPlayerListener extends PlayerListener {
 							System.out.println("DC8: ate food:" + item.getType().toString() + " for " + e.getEffectAmount(dCPlayer));
 						
 						player.setHealth(Math.min((int) (player.getHealth() + Util.randomAmount(e.getEffectAmount(dCPlayer))), 20));
-						player.getInventory().removeItem(item);
-						event.setCancelled(true);
+						
+						item.setAmount(item.getAmount() - 1);
+						if (item.getAmount() <= 0)
+							item = null;
+						
+						player.setItemInHand(item);
+						event.setCancelled(true);						
 					}
 				}
 			}
