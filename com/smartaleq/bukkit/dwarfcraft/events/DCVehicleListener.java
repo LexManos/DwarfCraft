@@ -2,6 +2,7 @@ package com.smartaleq.bukkit.dwarfcraft.events;
 
 import org.bukkit.craftbukkit.entity.CraftBoat;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
@@ -16,6 +17,8 @@ import com.smartaleq.bukkit.dwarfcraft.DwarfVehicle;
 import com.smartaleq.bukkit.dwarfcraft.Effect;
 import com.smartaleq.bukkit.dwarfcraft.EffectType;
 import com.smartaleq.bukkit.dwarfcraft.Skill;
+import java.util.HashMap;
+import org.bukkit.inventory.ItemStack;
 
 public class DCVehicleListener extends VehicleListener {
 	private final DwarfCraft plugin;
@@ -24,6 +27,49 @@ public class DCVehicleListener extends VehicleListener {
 		this.plugin = plugin;
 	}
 
+
+
+        /**
+         * Called when a vehicle is destroyed
+         *
+         * @param event
+         */
+        @Override
+        public void onVehicleDestroy(VehicleDestroyEvent event) {
+                /*
+                boolean dropChange = false;
+                if (event.getVehicle() instanceof CraftBoat && event.getAttacker() instanceof Player) {
+
+                        Player player     = (Player) event.getAttacker();
+                        DCPlayer dCPlayer = plugin.getDataManager().find(player);
+                        Location loc      = event.getVehicle().getLocation();
+                        HashMap<Integer, Skill> skills = dCPlayer.getSkills();
+
+                        for (Skill s : skills.values()) {
+                                for (Effect effect : s.getEffects()) {
+                                        if(effect.getEffectType() == EffectType.VEHICLEDROP) {
+                                           	ItemStack item = effect.getOutput(dCPlayer);
+
+                                                if (DwarfCraft.debugMessagesThreshold < 6) {
+                                                        System.out.println("Debug: dropped " + item.toString());
+                                                }
+
+                                                if (item.getAmount() != 0) {
+                                                        loc.getWorld().dropItemNaturally(loc, item);
+                                                        dropChange = true;
+                                                }
+                                        }
+                                }
+                         }
+                }
+                
+                if (dropChange) {
+                        event.getVehicle().remove();
+                        event.setCancelled(true);
+                }
+                 */
+        }
+        
 	/**
 	 * Called when a vehicle is damaged by the player.
 	 * 
@@ -31,8 +77,6 @@ public class DCVehicleListener extends VehicleListener {
 	 */
 	@Override
 	public void onVehicleDamage(VehicleDamageEvent event) {
-		// if(event.getDamage() > event.getVehicle().getHealth()) dropstuff
-		event.getAttacker();
 	}
 
 	@Override
