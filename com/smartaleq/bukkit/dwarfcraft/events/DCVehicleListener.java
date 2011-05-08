@@ -1,12 +1,14 @@
 package com.smartaleq.bukkit.dwarfcraft.events;
 
 import org.bukkit.craftbukkit.entity.CraftBoat;
-import org.bukkit.event.vehicle.VehicleDamageEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.entity.Boat;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 
@@ -23,18 +25,45 @@ public class DCVehicleListener extends VehicleListener {
 	public DCVehicleListener(final DwarfCraft plugin) {
 		this.plugin = plugin;
 	}
-
+	
 	/**
-	 * Called when a vehicle is damaged by the player.
-	 * 
-	 * @param event
-	 */
-	@Override
-	public void onVehicleDamage(VehicleDamageEvent event) {
-		// if(event.getDamage() > event.getVehicle().getHealth()) dropstuff
-		event.getAttacker();
-	}
+     * Called when a vehicle is destroyed
+     *
+     * @param event
+     */
+    @Override
+    public void onVehicleDestroy(VehicleDestroyEvent event) {
+    	boolean dropChange = false;
+    	
+    	if (event.getVehicle() instanceof Boat &&
+    		event.getAttacker() instanceof Player){
+    		
+    		Player player = (Player)event.getAttacker();
+    		DCPlayer dcPlayer = plugin.getDataManager().find(player);
+    		Location loc = event.getVehicle().getLocation();
 
+    		for (Skill skill : dcPlayer.getSkills().values()) {
+    			for (Effect effect : skill.getEffects()){
+    				if (effect.getEffectType() == EffectType.VEHICLEDROP){
+    					ItemStack drop = effect.getOutput(dcPlayer);
+    					
+    					if (DwarfCraft.debugMessagesThreshold < 6) 
+                            System.out.println("Debug: dropped " + drop.toString());
+    					
+    					if (drop.getAmount() != 0)
+    						loc.getWorld().dropItemNaturally(loc, drop);
+    					
+    					dropChange = true;
+    				}
+    			}
+    		}
+    	}
+    	
+    	if (dropChange){
+    		event.getVehicle().remove();
+    		event.setCancelled(true);
+    	}
+    }
 	@Override
 	public void onVehicleEnter(VehicleEnterEvent event) {
 		if (!(event.getVehicle() instanceof CraftBoat)) return;
@@ -48,8 +77,6 @@ public class DCVehicleListener extends VehicleListener {
 		if (!(event.getVehicle() instanceof CraftBoat)) return;
 		plugin.getDataManager().removeVehicle(event.getVehicle());
 	}
-
-//	 public void onVehicleDestroyed(VehicleDestroyedEvent event)
 
 	/**
 	 * Called when a vehicle moves.

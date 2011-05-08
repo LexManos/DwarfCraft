@@ -131,18 +131,22 @@ public class DwarfCraft extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_QUIT,     playerListener,  Priority.Low,     this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener,  Priority.Normal,  this);
 		pm.registerEvent(Event.Type.INVENTORY_OPEN,  playerListener,  Priority.Normal,  this);		
+		
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE,   entityListener,  Priority.High,    this);
 		pm.registerEvent(Event.Type.ENTITY_TARGET,   entityListener,  Priority.High,    this);
 		pm.registerEvent(Event.Type.ENTITY_DEATH,    entityListener,  Priority.Low,     this);
+		
 		pm.registerEvent(Event.Type.BLOCK_BREAK,     blockListener,   Priority.Highest, this);
 		pm.registerEvent(Event.Type.BLOCK_DAMAGE,    blockListener,   Priority.Normal,  this);
 		pm.registerEvent(Event.Type.BLOCK_PHYSICS,   blockListener,   Priority.Normal,  this);
+		
 		pm.registerEvent(Event.Type.VEHICLE_ENTER,   vehicleListener, Priority.Normal,  this);
 		pm.registerEvent(Event.Type.VEHICLE_EXIT,    vehicleListener, Priority.Normal,  this);
-		pm.registerEvent(Event.Type.VEHICLE_DAMAGE,  vehicleListener, Priority.Normal,  this);
 		pm.registerEvent(Event.Type.VEHICLE_MOVE,    vehicleListener, Priority.Lowest,  this);
+		pm.registerEvent(Event.Type.VEHICLE_DESTROY, vehicleListener, Priority.Highest, this);
+		
 		pm.registerEvent(Event.Type.CHUNK_UNLOAD,    worldListener,   Priority.Low,     this);
-		pm.registerEvent(Event.Type.WORLD_LOAD,      worldListener,   Priority.Low,     this);
+		//pm.registerEvent(Event.Type.WORLD_LOAD,      worldListener,   Priority.Low,     this);
 
 		npcm = new NPCManager(this);
 		cm   = new ConfigManager(this, getDataFolder().getAbsolutePath(), "DwarfCraft.config");

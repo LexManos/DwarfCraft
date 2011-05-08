@@ -307,7 +307,7 @@ public class Effect {
 	public ItemStack getOutput(DCPlayer player, Byte oldData){
 		Byte data = (mOutput.getData() == null ? null : mOutput.getData().getData());
 
-		if (data == -1)
+		if (data != null && data == -1)
 			data = oldData;
 		
 		int count = Util.randomAmount(getEffectAmount(player));
