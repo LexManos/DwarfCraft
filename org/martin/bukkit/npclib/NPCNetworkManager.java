@@ -15,7 +15,7 @@ public class NPCNetworkManager extends NetworkManager {
     public NPCNetworkManager(Socket socket, String s, NetHandler nethandler) {
         super(socket, s, nethandler);
         try {
-            Field f = NetworkManager.class.getDeclaredField("j");
+            Field f = NetworkManager.class.getDeclaredField("l");
             f.setAccessible(true);
             f.set(this, false);
         } catch (Exception e) {
@@ -36,15 +36,15 @@ public class NPCNetworkManager extends NetworkManager {
     }
 
     @Override
-    public void a() {
+    public void b() {
     }
 
     @Override
-    public void c() {
+    public void d() { 
     }
 
     @Override
-    public int d() {
+    public int e() {
         return 0;
     }
 }

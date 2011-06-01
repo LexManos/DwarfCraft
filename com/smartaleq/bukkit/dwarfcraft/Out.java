@@ -9,19 +9,19 @@ import org.bukkit.inventory.ItemStack;
 public class Out {
 
 	public enum Color {
-		DC(FixedColor.Gold), 
-		COMMAND(FixedColor.DarkRed), 
-		HELP(FixedColor.Pink), 
-		BADAMOUNT(FixedColor.Red), 
-		GOODAMOUNT(FixedColor.Green), 
+		DC          (FixedColor.Gold), 
+		COMMAND     (FixedColor.DarkRed), 
+		HELP        (FixedColor.Pink), 
+		BADAMOUNT   (FixedColor.Red), 
+		GOODAMOUNT  (FixedColor.Green), 
 		NORMALAMOUNT(FixedColor.Yellow),
-		ITEM(FixedColor.DarkGreen),
-		SKILLID(FixedColor.DarkTeal), 
-		SKILLLEVEL(FixedColor.Teal), 
-		EFFECT(FixedColor.Purple),
-		DWARF(FixedColor.Blue), 
-		ELF(FixedColor.White),
-		TRAINER(FixedColor.Gray);
+		ITEM        (FixedColor.DarkGreen),
+		SKILLID     (FixedColor.DarkTeal), 
+		SKILLLEVEL  (FixedColor.Teal), 
+		EFFECT      (FixedColor.Purple),
+		DWARF       (FixedColor.Blue), 
+		ELF         (FixedColor.White),
+		TRAINER     (FixedColor.Gray);
 		FixedColor fcolor;
 
 		Color(FixedColor fixedcolor) {
@@ -32,13 +32,25 @@ public class Out {
 			return fcolor.toString();
 		}
 	}
-	public enum FixedColor {
-		DarkRed("§4"), Red("§c"), Yellow("§e"), Gold("§6"), DarkGreen("§2"), 
-		Green("§a"), Teal("§b"), DarkTeal("§3"), Blue("§9"), Pink("§d"), 
-		Purple("§5"), White("§f"), Gray("§7"), DarkGray("§8"), Black("§0");
-
+	public enum FixedColor { 
+		Black    ("§0"), 
+		DarkBlue ("§1"),
+		DarkGreen("§2"), 
+		DarkTeal ("§3"),
+		DarkRed  ("§4"),  
+		Purple   ("§5"), 
+		Gold     ("§6"), 
+		Gray     ("§7"),  
+		DarkGray ("§8"),
+		Blue     ("§9"), 
+		Green    ("§a"), 
+		Teal     ("§b"), 
+		Red      ("§c"), 
+		Pink     ("§d"), 
+		Yellow   ("§e"), 
+		White    ("§f");
+		
 		String color;
-
 		FixedColor(String color) {
 			this.color = color;
 		}
@@ -46,7 +58,6 @@ public class Out {
 		public String toString() {
 			return color;
 		}
-
 	}
 	/*
 	 * Messaging Statics
