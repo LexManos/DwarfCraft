@@ -50,7 +50,7 @@ public class DCVehicleListener extends VehicleListener {
     					if (DwarfCraft.debugMessagesThreshold < 6) 
                             System.out.println("Debug: dropped " + drop.toString());
     					
-    					if (drop.getAmount() != 0)
+    					if (drop.getAmount() > 0)
     						loc.getWorld().dropItemNaturally(loc, drop);
     					
     					dropChange = true;

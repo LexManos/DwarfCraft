@@ -333,13 +333,14 @@ public class DCEntityListener extends EntityListener {
 								|| (effect.getId() == 851 && (deadThing instanceof CraftZombie))	) {
 
 							
-							int count = Util.randomAmount(effect.getEffectAmount(killer));
+							ItemStack output = effect.getOutput(killer);
 							if (DwarfCraft.debugMessagesThreshold < 5){
 								System.out.println(String.format("DC5: killed a %s effect called: %d created %d of %s\r\n",
-									deadThing.getClass().getSimpleName(), effect.getId(), count, 
-									org.bukkit.Material.getMaterial(effect.getOutputId()).name()));
+									deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), 
+									output.getType().name()));
 							}
-							items.add(effect.getOutput());
+							if (output.getAmount() > 0)
+								items.add(output);
 						}
 					}
 				}

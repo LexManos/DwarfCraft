@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/sqlite.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/Towny.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/Permissions.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/BukkitContrib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

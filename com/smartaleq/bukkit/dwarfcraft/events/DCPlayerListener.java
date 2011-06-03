@@ -114,7 +114,7 @@ public class DCPlayerListener extends PlayerListener {
 								if (DwarfCraft.debugMessagesThreshold < 6)
 									System.out.println("Debug: Hoed some ground, dropped " + output.toString());
 								
-								if (output.getAmount() != 0)
+								if (output.getAmount() > 0)
 									loc.getWorld().dropItemNaturally(loc, output);
 							}
 						}
