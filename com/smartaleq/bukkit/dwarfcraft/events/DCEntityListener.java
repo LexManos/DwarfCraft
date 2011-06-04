@@ -339,6 +339,8 @@ public class DCEntityListener extends EntityListener {
 									deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), 
 									output.getType().name()));
 							}
+                                                        if(deadThing instanceof CraftSheep)
+                                                                output.setDurability((short) ((CraftSheep)deadThing).getColor().ordinal());
 							if (output.getAmount() > 0)
 								items.add(output);
 						}
