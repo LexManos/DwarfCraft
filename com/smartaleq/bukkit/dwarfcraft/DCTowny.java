@@ -43,7 +43,7 @@ class DCTowny extends TownyPlayerListener {
 
 		try {
 			int cost = blockCost * selection.size();
-			if (TownySettings.isUsingIConomy() && !owner.canPay(cost))
+			if (TownySettings.isUsingIConomy() && !owner.canPayFromHoldings(cost))
 				throw new TownyException("Town cannot afford to claim " + selection.size() + " town blocks costing " + cost + TownyIConomyObject.getIConomyCurrency());
 		} catch (IConomyException e1) {
 			throw new TownyException("Iconomy Error");
