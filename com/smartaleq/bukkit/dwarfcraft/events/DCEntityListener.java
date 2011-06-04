@@ -169,7 +169,7 @@ public class DCEntityListener extends EntityListener {
 		for (Skill s : skills.values()) {
 			for (Effect e : s.getEffects()) {
 				if (tool != null){
-					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(toolId)) {
+					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {
 						if (DwarfCraft.debugMessagesThreshold < 2)
 							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + e.getId());
 						
@@ -334,11 +334,16 @@ public class DCEntityListener extends EntityListener {
 
 							
 							ItemStack output = effect.getOutput(killer);
+
+							if(deadThing instanceof CraftSheep)
+								output.setDurability((short)((CraftSheep)deadThing).getColor().ordinal());
+							
 							if (DwarfCraft.debugMessagesThreshold < 5){
 								System.out.println(String.format("DC5: killed a %s effect called: %d created %d of %s\r\n",
 									deadThing.getClass().getSimpleName(), effect.getId(), output.getAmount(), 
 									output.getType().name()));
-							}
+							}							
+							
 							if (output.getAmount() > 0)
 								items.add(output);
 						}

@@ -81,8 +81,8 @@ public class DCPlayerListener extends PlayerListener {
 		//EffectType.PLOWDURABILITY And EffectType.PLOW
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK){			
 			Block block = event.getClickedBlock();
-			Location loc = block.getLocation();
 			Material material = block.getType();
+			
 			for (Skill s : skills.values()) {
 				for (Effect effect : s.getEffects()) {
 					if (effect.getEffectType() == EffectType.PLOWDURABILITY) {
@@ -101,21 +101,6 @@ public class DCPlayerListener extends PlayerListener {
 									player.setItemInHand(null);
 								
 								block.setTypeId(60);
-							}
-						}
-					}
-					if (effect.getEffectType() == EffectType.PLOW) {
-						for (int id : effect.getTools()) {
-							if (id == itemId && material == Material.GRASS) {
-								loc.setY(loc.getY()+1);
-
-								ItemStack output = effect.getOutput(dCPlayer);
-								
-								if (DwarfCraft.debugMessagesThreshold < 6)
-									System.out.println("Debug: Hoed some ground, dropped " + output.toString());
-								
-								if (output.getAmount() > 0)
-									loc.getWorld().dropItemNaturally(loc, output);
 							}
 						}
 					}

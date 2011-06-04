@@ -53,7 +53,7 @@ public class DCBlockListener extends BlockListener {
 			durability = tool.getDurability();
 		}
 		
-		Location loc    = event.getBlock().getLocation();
+		Location loc   = event.getBlock().getLocation();
 		int materialId = event.getBlock().getTypeId();
 		byte meta      = event.getBlock().getData();
 
@@ -84,7 +84,7 @@ public class DCBlockListener extends BlockListener {
 					}
 				}
 				
-				if (effect.getEffectType() == EffectType.TOOLDURABILITY && durability != -1) {
+				if (effect.getEffectType() == EffectType.TOOLDURABILITY && durability != -1 && tool.getType().getMaxDurability() > 0) {
 					if (effect.checkTool(toolId)) {
 						double effectAmount = effect.getEffectAmount(dCPlayer);
 						if (DwarfCraft.debugMessagesThreshold < 3)
@@ -104,7 +104,7 @@ public class DCBlockListener extends BlockListener {
 					}
 				}
 				if (tool != null){
-					if (effect.getEffectType() == EffectType.SWORDDURABILITY && effect.checkTool(toolId)) {
+					if (effect.getEffectType() == EffectType.SWORDDURABILITY && effect.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {
 						if (DwarfCraft.debugMessagesThreshold < 2)
 							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + effect.getId());
 						
