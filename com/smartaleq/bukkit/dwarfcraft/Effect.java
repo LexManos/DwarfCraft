@@ -1,26 +1,28 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.jbls.LexManos.CSV.CSVRecord;
 
 public class Effect {
-	private int        mID;
-	private double     mBase;
-	private double     mLevelIncrease;
-	private double     mLevelIncreaseNovice;
-	private double     mMin;
-	private double     mMax;
-	private boolean    mException;
-	private double     mExceptionLow;
-	private double     mExceptionHigh;
-	private double     mExceptionValue;
-	private int        mNormalLevel;
-	private EffectType mType;
-	private ItemStack  mInitator;
-	private ItemStack  mOutput;
-	private boolean    mRequireTool;
-	private int[]      mTools;
-	private boolean    mFloorResult;
+	private int          mID;
+	private double       mBase;
+	private double       mLevelIncrease;
+	private double       mLevelIncreaseNovice;
+	private double       mMin;
+	private double       mMax;
+	private boolean      mException;
+	private double       mExceptionLow;
+	private double       mExceptionHigh;
+	private double       mExceptionValue;
+	private int          mNormalLevel;
+	private EffectType   mType;
+	private ItemStack    mInitator;
+	private ItemStack    mOutput;
+	private boolean      mRequireTool;
+	private int[]        mTools;
+	private boolean      mFloorResult;
+	private CreatureType mCreature;
 
 	public Effect(CSVRecord record) {
 		if (record == null)
@@ -37,7 +39,11 @@ public class Effect {
 		mExceptionValue      = record.getDouble("ExceptionValue");
 		mNormalLevel         = record.getInt("NormalLevel");
 		mType                = EffectType.getEffectType(record.getString("Type"));
-		mInitator            = Util.parseItem(record.getString("OriginID"));
+		if (mType != EffectType.MOBDROP){
+			mInitator            = Util.parseItem(record.getString("OriginID"));
+		}else{
+			mCreature = CreatureType.fromName(record.getString("OriginID"));
+		}
 		mOutput              = Util.parseItem(record.getString("OutputID"));
 		mRequireTool         = record.getBool("RequireTool");
 		mFloorResult         = record.getBool("Floor");
@@ -351,6 +357,30 @@ public class Effect {
 			if (toolId == 256) return "shovels";
 		}
 		return "any tool";
+	}
+	
+	public boolean checkMob(Entity entity){
+		if (mCreature == null)
+			return false;
+		
+		switch (mCreature){
+			case CHICKEN:    return (entity instanceof Chicken);
+			case COW:        return (entity instanceof Cow);
+			case CREEPER:    return (entity instanceof Creeper);
+			case GHAST:      return (entity instanceof Ghast);
+			case GIANT:      return (entity instanceof Giant);
+			case MONSTER:    return (entity instanceof Monster);
+			case PIG:        return (entity instanceof Pig);
+			case PIG_ZOMBIE: return (entity instanceof PigZombie);
+			case SHEEP:      return (entity instanceof Sheep);
+			case SKELETON:   return (entity instanceof Skeleton);
+			case SLIME:      return (entity instanceof Slime);
+			case SPIDER:     return (entity instanceof Spider);
+			case SQUID:      return (entity instanceof Squid);
+			case ZOMBIE:     return (entity instanceof Zombie) && !(entity instanceof PigZombie);
+			case WOLF:       return (entity instanceof Wolf);
+			default:         return false;
+		}
 	}
 	
 	public boolean checkTool(int toolID){

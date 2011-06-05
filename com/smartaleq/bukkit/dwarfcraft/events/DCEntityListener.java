@@ -317,22 +317,7 @@ public class DCEntityListener extends EntityListener {
 			for (Skill skill : killer.getSkills().values()) {
 				for (Effect effect : skill.getEffects()) {
 					if (effect.getEffectType() == EffectType.MOBDROP) {
-						
-						if (
-								   (effect.getId() == 810 && (deadThing instanceof CraftPig))     //Animal Hunter
-								|| (effect.getId() == 811 && (deadThing instanceof CraftCow))
-								|| (effect.getId() == 812 && (deadThing instanceof CraftSheep))
-								|| (effect.getId() == 813 && (deadThing instanceof CraftChicken))
-								
-								|| (effect.getId() == 820 && (deadThing instanceof CraftCreeper)) //Monster Hunter
-								|| (effect.getId() == 823 && (deadThing instanceof CraftSpider))
-								|| (effect.getId() == 821 && (deadThing instanceof CraftSkeleton))
-								|| (effect.getId() == 822 && (deadThing instanceof CraftSkeleton))
-								
-								|| (effect.getId() == 850 && (deadThing instanceof CraftZombie))  //Archer
-								|| (effect.getId() == 851 && (deadThing instanceof CraftZombie))	) {
-
-							
+						if (effect.checkMob(deadThing)) {
 							ItemStack output = effect.getOutput(killer);
 
 							if(deadThing instanceof CraftSheep)

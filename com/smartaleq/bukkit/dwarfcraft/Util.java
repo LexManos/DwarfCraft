@@ -107,6 +107,8 @@ public class Util {
 	}
 	
 	public static String getCleanName(ItemStack item){
+		if (item == null)
+			return "NULL";
 		if (item.getData() == null || item.getData().getData() == -1)
 			return item.getType().toString();
 		
