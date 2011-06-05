@@ -170,10 +170,16 @@ public class DCEntityListener extends EntityListener {
 			for (Effect e : s.getEffects()) {
 				if (tool != null){
 					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {
-						if (DwarfCraft.debugMessagesThreshold < 2)
-							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + e.getId());
 						
-						tool.setDurability((short)(durability + Util.randomAmount(e.getEffectAmount(attacker))));
+						short wear = (short)Util.randomAmount(e.getEffectAmount(attacker));
+						
+						if (DwarfCraft.debugMessagesThreshold < 2)
+							System.out.println(String.format("DC2: Affected durability of a sword - old: %d effect called: %d Wear: %d", durability, e.getId(), wear));
+
+						if (wear == 1)
+							continue; //This is normal wear, skip everything and let MC handle it internally.
+						
+						tool.setDurability((short)(durability + wear - 1)); //-1 because MC internally does 1 damage no matter what.
 						
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
@@ -181,8 +187,14 @@ public class DCEntityListener extends EntityListener {
 						if (tool.getDurability() >= tool.getType().getMaxDurability()){
 							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
 								continue;
-							attacker.getPlayer().setItemInHand(null);
-						}
+							
+							if (tool.getAmount() > 1){
+								tool.setAmount(tool.getAmount() - 1);
+								tool.setDurability((short)-1);
+							} else {
+								attacker.getPlayer().setItemInHand(null);
+							}
+						}						
 					}
 				}
 				
@@ -202,6 +214,7 @@ public class DCEntityListener extends EntityListener {
 									event.getDamage(), damage, hp, e.getId()));
 						}
 				}
+				
 				if (e.getEffectType() == EffectType.PVPDAMAGE && isPVP && e.checkTool(toolId)) {
 					damage = Util.randomAmount((e.getEffectAmount(attacker)) * damage);
 					event.setDamage(damage);
@@ -309,7 +322,13 @@ public class DCEntityListener extends EntityListener {
 		if (deadThing instanceof Player)
 			return;			
 		
+		boolean changed = false;
+		
 		List<ItemStack> items = event.getDrops();
+		
+		ItemStack[] normal = new ItemStack[items.size()];
+		items.toArray(normal);
+		
 		items.clear();
 		
 		if (killMap.containsKey(event.getEntity())){
@@ -329,13 +348,19 @@ public class DCEntityListener extends EntityListener {
 									output.getType().name()));
 							}							
 							
+							changed = true;
 							if (output.getAmount() > 0)
 								items.add(output);
 						}
 					}
 				}
 			}
-		}	
+			if (!changed){ //If there was no skill for this type of entity, just give the normal drop.
+				for(ItemStack i : normal)
+					items.add(i);
+			}
+		}
+		
 	}
 
 	@Override

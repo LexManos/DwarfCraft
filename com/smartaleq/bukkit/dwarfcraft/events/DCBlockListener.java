@@ -95,20 +95,31 @@ public class DCBlockListener extends BlockListener {
 						// doesn't take special durability damage
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a tool - new:" + tool.getDurability());
-						
+
 						if (tool.getDurability() >= tool.getType().getMaxDurability()){
 							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
 								continue;
-							player.setItemInHand(null);
+							
+							if (tool.getAmount() > 1){
+								tool.setAmount(tool.getAmount() - 1);
+								tool.setDurability((short)-1);
+							} else {
+								dCPlayer.getPlayer().setItemInHand(null);
+							}
 						}
 					}
 				}
 				if (tool != null){
-					if (effect.getEffectType() == EffectType.SWORDDURABILITY && effect.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {
-						if (DwarfCraft.debugMessagesThreshold < 2)
-							System.out.println("DC2: affected durability of a sword - old:" + durability + " effect called: " + effect.getId());
+					if (effect.getEffectType() == EffectType.SWORDDURABILITY && effect.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {						
+						short wear = (short)Util.randomAmount(effect.getEffectAmount(dCPlayer) * 2);
 						
-						tool.setDurability((short)(durability + (Util.randomAmount(effect.getEffectAmount(dCPlayer) * 2))));
+						if (DwarfCraft.debugMessagesThreshold < 2)
+							System.out.println(String.format("DC2: Affected durability of a sword - old: %d effect called: %d Wear: %d", durability, effect.getId(), wear));
+
+						if (wear == 2)
+							continue; //This is normal wear, skip everything and let MC handle it internally.
+						
+						tool.setDurability((short)(durability + wear - 2)); //-2 because MC internally does 1 damage no matter what.
 						
 						if (DwarfCraft.debugMessagesThreshold < 3)
 							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
@@ -116,7 +127,13 @@ public class DCBlockListener extends BlockListener {
 						if (tool.getDurability() >= tool.getType().getMaxDurability()){
 							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
 								continue;
-							player.setItemInHand(null);
+							
+							if (tool.getAmount() > 1){
+								tool.setAmount(tool.getAmount() - 1);
+								tool.setDurability((short)-1);
+							} else {
+								dCPlayer.getPlayer().setItemInHand(null);
+							}
 						}
 					}
 				}
