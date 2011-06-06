@@ -72,7 +72,7 @@ public class DCBlockListener extends BlockListener {
 						e.damageTool(player, 2, tool, !blockDropChange);
 
 					if (e.getEffectType() == EffectType.TOOLDURABILITY && e.checkTool(tool))
-						e.damageTool(player, 2, tool, !blockDropChange);
+						e.damageTool(player, 1, tool, !blockDropChange);
 				}
 			}
 		}
