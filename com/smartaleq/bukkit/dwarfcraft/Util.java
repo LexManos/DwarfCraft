@@ -1,8 +1,6 @@
 package com.smartaleq.bukkit.dwarfcraft;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Coal;
 import org.bukkit.material.Crops;
@@ -23,8 +21,7 @@ public class Util {
 			return 4;
 		else if ("fk{}<>\"*()".indexOf(x) != -1)
 			return 5;
-		else if ("abcdeghjmnopqrsuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890\\/#?$%-=_+&^"
-				.indexOf(x) != -1)
+		else if ("abcdeghjmnopqrsuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890\\/#?$%-=_+&^".indexOf(x) != -1)
 			return 6;
 		else if ("@~".indexOf(x) != -1)
 			return 7;
@@ -63,29 +60,6 @@ public class Util {
 				retval = retval + str.charAt(i);
 		}
 		return retval;
-	}
-
-	public static boolean toolChecker(Player player) {
-		Inventory inv = player.getInventory();
-		ItemStack[] contents = inv.getContents();
-		ItemStack[] newContents = contents.clone();
-		boolean removedSomething = false;
-		for (int i = 0; i < contents.length;i++) {
-			if (contents[i] == null)
-				continue;
-			ItemStack item = contents[i];
-			int damage = item.getDurability();
-			int maxDamage = item.getType().getMaxDurability();
-			if (item.getTypeId() == 267){
-				maxDamage = 256; //hack to fix bug in craftbukkit
-			}
-			if (damage >= maxDamage && damage > 17 ) {
-				newContents[i] = null;
-				removedSomething = true;
-			}
-		}
-		inv.setContents(newContents);
-		return removedSomething;
 	}
 	
 	public static ItemStack parseItem(String info){

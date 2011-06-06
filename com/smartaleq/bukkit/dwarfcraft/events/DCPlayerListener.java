@@ -15,6 +15,7 @@ import org.bukkit.event.block.Action;
 
 import com.smartaleq.bukkit.dwarfcraft.DCCraftSchedule;
 import com.smartaleq.bukkit.dwarfcraft.DCPlayer;
+import com.smartaleq.bukkit.dwarfcraft.DataManager;
 import com.smartaleq.bukkit.dwarfcraft.DwarfCraft;
 import com.smartaleq.bukkit.dwarfcraft.Effect;
 import com.smartaleq.bukkit.dwarfcraft.EffectType;
@@ -28,9 +29,7 @@ public class DCPlayerListener extends PlayerListener {
 		this.plugin = plugin;
 	}
 	
-	public void onPlayerQuit(PlayerQuitEvent event)
-	{
-	}
+	public void onPlayerQuit(PlayerQuitEvent event){}
 
 	/**
 	 * When a player joins the server this initialized their data from the
@@ -40,15 +39,14 @@ public class DCPlayerListener extends PlayerListener {
 	 */
 	@Override
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
-		DCPlayer dCPlayer = plugin.getDataManager().find(player);
-		if (dCPlayer == null) {
-			dCPlayer = plugin.getDataManager().createDwarf(player);
-		}
-		if (!plugin.getDataManager().getDwarfData(dCPlayer)) {
-			plugin.getDataManager().createDwarfData(dCPlayer);
-		}
-		plugin.getOut().welcome(plugin.getServer(), dCPlayer);
+		DataManager dm     = plugin.getDataManager();
+		Player      player = event.getPlayer();
+		DCPlayer    data   = dm.find(player);
+		
+		if (data == null)           data = dm.createDwarf(player);
+		if (!dm.getDwarfData(data)) dm.createDwarfData(data);
+			
+		plugin.getOut().welcome(plugin.getServer(), data);
 	}
 	
     /**	
@@ -65,42 +63,23 @@ public class DCPlayerListener extends PlayerListener {
 			sched.setID(id);
 		}
 		
-		Player     player = event.getPlayer();
-		DCPlayer dCPlayer = plugin.getDataManager().find(player);
-		HashMap<Integer, Skill> skills = dCPlayer.getSkills();
+		Player   player = event.getPlayer();
+		DCPlayer dcPlayer = plugin.getDataManager().find(player);
+		HashMap<Integer, Skill> skills = dcPlayer.getSkills();
+		
 		ItemStack item = player.getItemInHand();
-		int itemId = -1;
-		short durability = 0;
-		
-		if (item != null) {
-			itemId = item.getTypeId();
-			durability = item.getDurability();
-		}
-		
-		//EffectType.PLOWDURABILITY And EffectType.PLOW
+				
+		//EffectType.PLOWDURABILITY
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK){			
-			Block block = event.getClickedBlock();
+			Block    block    = event.getClickedBlock();
 			Material material = block.getType();
 			
-			for (Skill s : skills.values()) {
-				for (Effect effect : s.getEffects()) {
-					if (effect.getEffectType() == EffectType.PLOWDURABILITY) {
-						for (int id : effect.getTools()) {
-							if (id == itemId && (material == Material.DIRT || material == Material.GRASS)) {
-								double effectAmount = effect.getEffectAmount(dCPlayer);
-								if (DwarfCraft.debugMessagesThreshold < 3)
-									System.out.println("DC2: affected durability of a hoe - old:" + durability);
-								
-								item.setDurability((short)(durability + Util.randomAmount(effectAmount)));
-								
-								if (DwarfCraft.debugMessagesThreshold < 3)
-									System.out.println("DC3: affected durability of a hoe - new:" + item.getDurability());
-								
-								if (item.getDurability() >= item.getType().getMaxDurability())
-									player.setItemInHand(null);
-								
-								block.setTypeId(60);
-							}
+			if (material == Material.DIRT || material == Material.GRASS){			
+				for (Skill s : skills.values()) {
+					for (Effect effect : s.getEffects()) {
+						if (effect.getEffectType() == EffectType.PLOWDURABILITY && effect.checkTool(item)) {
+							effect.damageTool(dcPlayer, 1, item);
+							//block.setTypeId(60);
 						}
 					}
 				}
@@ -111,11 +90,14 @@ public class DCPlayerListener extends PlayerListener {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR){	
 			for (Skill s : skills.values()) {
 				for (Effect e : s.getEffects()) {
-					if (e.getEffectType() == EffectType.EAT && e.getInitiatorId() == itemId) {
-						if (DwarfCraft.debugMessagesThreshold < 8)
-							System.out.println("DC8: ate food:" + item.getType().toString() + " for " + e.getEffectAmount(dCPlayer));
+					if (e.getEffectType() == EffectType.EAT && e.checkInitiator(item)) {
+						int health = Util.randomAmount(e.getEffectAmount(dcPlayer));
 						
-						player.setHealth(Math.min((int) (player.getHealth() + Util.randomAmount(e.getEffectAmount(dCPlayer))), 20));
+						if (DwarfCraft.debugMessagesThreshold < 8)
+							System.out.println(String.format("DC8: Are Food: \"%s\" for %d health", Util.getCleanName(item), health));
+						
+						
+						player.setHealth(Math.min((int)(player.getHealth() + health), 20));
 						
 						item.setAmount(item.getAmount() - 1);
 						if (item.getAmount() <= 0)
@@ -136,7 +118,6 @@ public class DCPlayerListener extends PlayerListener {
      */
 	@Override
     public void onInventoryOpen(PlayerInventoryEvent event) {
-		System.out.println("Inventory open");
 		DCCraftSchedule sched = new DCCraftSchedule(plugin, plugin.getDataManager().find(event.getPlayer()));
 		int id = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, sched, 0, 2);
 		sched.setID(id);

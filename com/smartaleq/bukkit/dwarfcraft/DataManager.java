@@ -262,7 +262,7 @@ public class DataManager {
 			if (!rs.next())
 				return false;
 			
-			System.out.println("DC: PlayerJoin success for " + player.getPlayer().getName() + " id " + rs.getInt("id"));
+			//System.out.println("DC: PlayerJoin success for " + player.getPlayer().getName() + " id " + rs.getInt("id"));
 			
 			player.changeRace(plugin.getConfigManager().findRace(rs.getString("race"), false));
 			int id = rs.getInt("id");

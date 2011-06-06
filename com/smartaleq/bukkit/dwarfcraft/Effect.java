@@ -328,7 +328,12 @@ public class Effect {
 	public int[] getTools() {
 		return mTools;
 	}
-	
+	public boolean checkInitiator(ItemStack item){
+		if (item == null)
+			return checkInitiator(-1, (byte)0);
+		else
+			return checkInitiator(item.getTypeId(), (byte)item.getDurability());
+	}
 	public boolean checkInitiator(int id, byte data){
 		if (mInitator.getTypeId() != id)
 			return false;
@@ -383,16 +388,57 @@ public class Effect {
 		}
 	}
 	
-	public boolean checkTool(int toolID){
+	public boolean checkTool(ItemStack tool){
+		if (!mRequireTool)
+			return true;
+		
+		if (tool == null)
+			return false;
+		
 		for (int id : mTools)
-			if (id == toolID)
+			if (id == tool.getTypeId())
 				return true;
-		return !mRequireTool;
+		
+		return false;
 	}
 
 	@Override
 	public String toString() {
 		return Integer.toString(mID);
+	}
+	
+	public void damageTool(DCPlayer player, int base, ItemStack tool){
+		damageTool(player, base, tool, true);
+	}
+	
+	public void damageTool(DCPlayer player, int base, ItemStack tool, boolean negate){
+		short wear = (short)(Util.randomAmount(getEffectAmount(player)) * base);
+		
+		if (DwarfCraft.debugMessagesThreshold < 2)
+			System.out.println(String.format("DC2: Affected durability of a \"%s\" - Effect: %d Old: %d Base: %d Wear: %d", 
+					Util.getCleanName(tool), mID, tool.getDurability(), base, wear));
+		
+		base = (negate ? base : 0);
+		
+		if (wear == base)
+			return; //This is normal wear, skip everything and let MC handle it internally.
+		
+		tool.setDurability((short)(tool.getDurability() + wear - base));
+		//This may have the side effect of causing items to flicker when they are about to break
+		//If this becomes a issue, we need to cast to a CraftItemStack, then make CraftItemStack.item public,
+		//And call CraftItemStack.item.damage(-base, player.getPlayer());
+		
+		if (tool.getDurability() >= tool.getType().getMaxDurability()){
+			if (tool.getTypeId() == 267 && tool.getDurability() < 250)
+				return;
+			
+			if (tool.getAmount() > 1){
+				tool.setAmount(tool.getAmount() - 1);
+				tool.setDurability((short)-1);
+			} else {
+				player.getPlayer().setItemInHand(null);
+			}
+		}	
 	}
 
 }

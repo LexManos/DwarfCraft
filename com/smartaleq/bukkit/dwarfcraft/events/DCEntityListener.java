@@ -157,48 +157,19 @@ public class DCEntityListener extends EntityListener {
 		}
 		
 		ItemStack tool = attacker.getPlayer().getItemInHand();
-		int toolId = -1;
-		short durability = 0;
-		
-		if (tool != null) {
-			toolId = tool.getTypeId();
-			durability = tool.getDurability();
-		}
-		
 		HashMap<Integer, Skill> skills = attacker.getSkills();
+		
 		for (Skill s : skills.values()) {
 			for (Effect e : s.getEffects()) {
-				if (tool != null){
-					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(toolId) && tool.getType().getMaxDurability() > 0) {
+				if (tool != null && tool.getType().getMaxDurability() > 0){
+					if (e.getEffectType() == EffectType.SWORDDURABILITY && e.checkTool(tool))
+						e.damageTool(attacker, 1, tool);
 						
-						short wear = (short)Util.randomAmount(e.getEffectAmount(attacker));
-						
-						if (DwarfCraft.debugMessagesThreshold < 2)
-							System.out.println(String.format("DC2: Affected durability of a sword - old: %d effect called: %d Wear: %d", durability, e.getId(), wear));
-
-						if (wear == 1)
-							continue; //This is normal wear, skip everything and let MC handle it internally.
-						
-						tool.setDurability((short)(durability + wear - 1)); //-1 because MC internally does 1 damage no matter what.
-						
-						if (DwarfCraft.debugMessagesThreshold < 3)
-							System.out.println("DC3: affected durability of a sword - new:" + tool.getDurability());
-
-						if (tool.getDurability() >= tool.getType().getMaxDurability()){
-							if (tool.getTypeId() == 267 && tool.getDurability() < 250)
-								continue;
-							
-							if (tool.getAmount() > 1){
-								tool.setAmount(tool.getAmount() - 1);
-								tool.setDurability((short)-1);
-							} else {
-								attacker.getPlayer().setItemInHand(null);
-							}
-						}						
-					}
+					if (e.getEffectType() == EffectType.TOOLDURABILITY && e.checkTool(tool)) 
+						e.damageTool(attacker, 2, tool);
 				}
 				
-				if (e.getEffectType() == EffectType.PVEDAMAGE && !isPVP && e.checkTool(toolId)) {
+				if (e.getEffectType() == EffectType.PVEDAMAGE && !isPVP && e.checkTool(tool)) {
 						if (hp <= 0) {
 							event.setCancelled(true);
 							return;
@@ -215,7 +186,7 @@ public class DCEntityListener extends EntityListener {
 						}
 				}
 				
-				if (e.getEffectType() == EffectType.PVPDAMAGE && isPVP && e.checkTool(toolId)) {
+				if (e.getEffectType() == EffectType.PVPDAMAGE && isPVP && e.checkTool(tool)) {
 					damage = Util.randomAmount((e.getEffectAmount(attacker)) * damage);
 					event.setDamage(damage);
 					if (DwarfCraft.debugMessagesThreshold < 6){
