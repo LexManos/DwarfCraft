@@ -78,6 +78,9 @@ public class DataManager {
 						"    'player' INT, " +
 						"    'id' int, " +
 						"    'level' INT DEFAULT 0, " +
+						"    'deposit1' INT DEFAULT 0, " + 
+						"    'deposit2' INT DEFAULT 0, " +
+						"    'deposit3' INT DEFAULT 0, " +
 						"    PRIMARY KEY ('player','id') " +
 						"  );"
 				);
@@ -120,7 +123,9 @@ public class DataManager {
 			assert(id == -1);
 			System.out.println(String.format("Converting %s id %d", playerName, id));
 
-			PreparedStatement prep = mDBCon.prepareStatement("INSERT INTO skills(player, id, level) values(?,?,?);");			
+			PreparedStatement prep = mDBCon.prepareStatement("INSERT INTO skills(player, id, level, " +
+																				"deposit1, deposit2, deposit3) " +
+																				"values(?,?,?,?,?,?);");			
 			HashMap<Integer,Skill> skills = plugin.getConfigManager().getAllSkills();
 			for(Skill skill : skills.values()){
 				
@@ -133,6 +138,9 @@ public class DataManager {
 					prep.setInt(3, 0);
 					System.out.println(String.format("\t%s\t\t0 - Default", skill.toString()));
 				}
+				prep.setInt(4, 0);
+				prep.setInt(5, 0);
+				prep.setInt(6, 0);
 				prep.addBatch();
 			}
 			prep.executeBatch();
@@ -161,8 +169,12 @@ public class DataManager {
 		newDwarf.changeRace(plugin.getConfigManager().getDefaultRace());
 		newDwarf.setSkills(plugin.getConfigManager().getAllSkills(newDwarf.getRace()));
 		
-		for (Skill skill : newDwarf.getSkills().values())
+		for (Skill skill : newDwarf.getSkills().values()) {
 			skill.setLevel(0);
+			skill.setDeposit1(0);
+			skill.setDeposit2(0);
+			skill.setDeposit3(0);
+		}
 		
 		if (player != null)
 			dwarves.add(newDwarf);
@@ -193,6 +205,16 @@ public class DataManager {
 			if (!rs.next()){
 				buildDB(0);
 			}
+			
+			//check for update to skill deposits
+			try {
+			rs = statement.executeQuery("SELECT deposit1 FROM skills;");
+			} catch (SQLException ex) {
+				statement.executeUpdate("ALTER TABLE skills ADD COLUMN deposit1 NUMERIC DEFAULT 0;");
+				statement.executeUpdate("ALTER TABLE skills ADD COLUMN deposit2 NUMERIC DEFAULT 0;");
+				statement.executeUpdate("ALTER TABLE skills ADD COLUMN deposit3 NUMERIC DEFAULT 0;");
+			}	
+			
 			rs.close();
 			mDBCon.setAutoCommit(true);
 		} catch (SQLException e) {
@@ -269,7 +291,8 @@ public class DataManager {
 			rs.close();
 			
 			prep.close();
-			prep = mDBCon.prepareStatement("select id, level from skills WHERE player = ?;");
+			prep = mDBCon.prepareStatement("select id, level, deposit1, deposit2, deposit3 " +
+											"from skills WHERE player = ?;");
 			prep.setInt(1, id);
 			rs = prep.executeQuery();
 			
@@ -279,6 +302,9 @@ public class DataManager {
 				Skill skill = player.getSkill(skillID);
 				if (skill != null){
 					skill.setLevel(level);
+					skill.setDeposit1(rs.getInt("deposit1"));
+					skill.setDeposit2(rs.getInt("deposit2"));
+					skill.setDeposit3(rs.getInt("deposit3"));
 				}
 			}
 			rs.close();
@@ -450,13 +476,18 @@ public class DataManager {
 			prep.execute();
 			prep.close();
 			
-			prep = mDBCon.prepareStatement("REPLACE INTO skills(player, id, level) values(?,?,?);");
+			prep = mDBCon.prepareStatement("REPLACE INTO skills(player, id, level, " +
+																"deposit1, deposit2, deposit3) " +
+																"values(?,?,?,?,?,?);");
 			
 			int id = getPlayerID(dCPlayer.getPlayer().getName());
 			for (Skill skill : dCPlayer.getSkills().values()){
 				prep.setInt(1, id);
 				prep.setInt(2, skill.getId());
 				prep.setInt(3, skill.getLevel());
+				prep.setInt(4, skill.getDeposit1());
+				prep.setInt(5, skill.getDeposit2());
+				prep.setInt(6, skill.getDeposit3());
 				prep.addBatch();
 			}
 			prep.executeBatch();

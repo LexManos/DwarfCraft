@@ -161,29 +161,71 @@ public final class DwarfTrainer {
 		}
 
 		boolean hasMats = true;
-		for (ItemStack itemStack : trainingCosts) {
-			if (itemStack == null)
+		boolean deposited = false;
+		for (ItemStack costStack : trainingCosts) {
+			if (costStack == null) {
 				continue;
-			if (itemStack.getAmount() == 0)
-				continue;
-
-			if (!player.getInventory().contains(itemStack.getTypeId(), itemStack.getAmount())){
+			}
+			if (costStack.getAmount() == 0) {
 				plugin.getOut().sendMessage(player,
-						String.format("&cYou do not have the &2%d %s &crequired", itemStack.getAmount(), itemStack.getType()), tag);
+						String.format("&aNo more &2%s &ais needed", costStack.getType()), tag);
+				continue;
+			}
+			if (!player.getInventory().contains(costStack.getTypeId())) {
 				hasMats = false;
-			} else
 				plugin.getOut().sendMessage(player,
-						String.format("&aYou have the &2%d %s &arequired", itemStack.getAmount(), itemStack.getType()), tag);
+						String.format("&cAn additional &2%d %s &cis required", costStack.getAmount(), costStack.getType()), tag);
+				continue;
+			}
+			
+			for (ItemStack invStack : player.getInventory().getContents()) {
+				if(invStack == null)
+					continue;					
+				
+				if (invStack.getTypeId() == costStack.getTypeId()) {
+					deposited = true;
+					int inv = invStack.getAmount();
+					int cost = costStack.getAmount();
+					int delta;
+					if (cost - inv >= 0) {	
+						costStack.setAmount(cost - inv);
+						player.getInventory().remove(invStack);
+						delta = inv;
+					} else {
+						costStack.setAmount(0);
+						invStack.setAmount(inv - cost);
+						delta = cost;
+					}
+					
+					if (costStack.getType().equals(skill.Item1.Item)) {
+						skill.setDeposit1(skill.getDeposit1() + delta);
+					} else if(costStack.getType().equals(skill.Item2.Item)) {
+						skill.setDeposit2(skill.getDeposit2() + delta);
+					} else {
+						skill.setDeposit3(skill.getDeposit3() + delta);
+					}				
+				}
+			}
+			if (costStack.getAmount() == 0) {
+				plugin.getOut().sendMessage(player,
+						String.format("&aNo more &2%s &ais needed", costStack.getType()), tag);
+			} else {
+				plugin.getOut().sendMessage(player,
+						String.format("&cAn additional &2%d %s &c is required", costStack.getAmount(), costStack.getType()), tag);
+				hasMats = false;
+			}
 
 		}
-		if(!hasMats)
-			return;
 		
-		skill.setLevel(skill.getLevel() + 1);
-		for (ItemStack itemStack : trainingCosts)
-			player.getInventory().removeItem(itemStack);
-		
-		plugin.getOut().sendMessage(player, "&6Training Successful!", tag);
-		plugin.getDataManager().saveDwarfData(dCPlayer);
+		if (hasMats) {	
+			skill.setLevel(skill.getLevel() + 1);	
+			skill.setDeposit1(0);
+			skill.setDeposit2(0);
+			skill.setDeposit3(0);
+			plugin.getOut().sendMessage(player, "&6Training Successful!", tag);
+		}
+		if (deposited || hasMats) {
+			plugin.getDataManager().saveDwarfData(dCPlayer);
+		}
 	}
 }

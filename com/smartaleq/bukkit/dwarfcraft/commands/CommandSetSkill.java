@@ -69,6 +69,9 @@ public class CommandSetSkill extends Command {
 				if(skill == null){
 					for(Skill s : dCPlayer.getSkills().values()){
 						s.setLevel(level);
+						s.setDeposit1(0);
+						s.setDeposit2(0);
+						s.setDeposit3(0);
 					}
 					plugin.getOut().sendMessage(sender, "&aAdmin: &eset all skills for player &9" + name + "&e to &3" + level);
 					plugin.getDataManager().saveDwarfData(dCPlayer);

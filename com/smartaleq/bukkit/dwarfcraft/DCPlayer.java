@@ -67,15 +67,15 @@ public class DCPlayer {
 		// create output item stack of new items
 		
 		trainingStack.add(new ItemStack(skill.Item1.Item, 
-				(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item1.Base * multiplier - .01), skill.Item1.Max)));
+				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item1.Base * multiplier - .01), skill.Item1.Max)) - skill.getDeposit1()));
 		
 		if (skill.Item2.Item != Material.AIR){
 			trainingStack.add(new ItemStack(skill.Item2.Item,
-					(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item2.Base * multiplier - .01), skill.Item2.Max)));
+				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item2.Base * multiplier - .01), skill.Item2.Max)) - skill.getDeposit2()));
 		}
 		if (skill.Item3.Item != Material.AIR){
 			trainingStack.add(new ItemStack(skill.Item3.Item, 
-							(int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item3.Base * multiplier - .01), skill.Item3.Max)));
+				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item3.Base * multiplier - .01), skill.Item3.Max)) - skill.getDeposit3()));
 		}
 		return trainingStack;
 	}

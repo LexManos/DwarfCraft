@@ -14,6 +14,9 @@ public class Skill implements Cloneable {
 	public final TrainingItem  Item1;
 	public final TrainingItem  Item2;
 	public final TrainingItem  Item3;
+	private int				   deposit1;
+	private int                deposit2;
+	private int                deposit3;
 
 	public Skill(int id, String displayName, int level, List<Effect> effects, 
 			TrainingItem item1, TrainingItem item2, TrainingItem item3,
@@ -39,6 +42,7 @@ public class Skill implements Cloneable {
 	 */
 	@Override
 	public Skill clone() {
+		
 		Skill newSkill = new Skill(mID, mName, mLevel, mEffects, Item1, Item2, Item3, mHeldItem);
 		return newSkill;
 	}
@@ -70,5 +74,29 @@ public class Skill implements Cloneable {
 	@Override
 	public String toString() {
 		return mName.toUpperCase().replaceAll(" ", "_");
+	}
+
+	public void setDeposit1(int deposit1) {
+		this.deposit1 = deposit1;
+	}
+
+	public int getDeposit1() {
+		return deposit1;
+	}
+
+	public void setDeposit2(int deposit2) {
+		this.deposit2 = deposit2;
+	}
+
+	public int getDeposit2() {
+		return deposit2;
+	}
+
+	public void setDeposit3(int deposit3) {
+		this.deposit3 = deposit3;
+	}
+
+	public int getDeposit3() {
+		return deposit3;
 	}
 }
