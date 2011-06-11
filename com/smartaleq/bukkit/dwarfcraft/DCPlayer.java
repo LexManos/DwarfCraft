@@ -26,13 +26,14 @@ public class DCPlayer {
 		race = plugin.getConfigManager().getDefaultRace();
 	}
 
-	protected List<ItemStack> calculateTrainingCost(Skill skill) {
+	protected List<List<ItemStack>> calculateTrainingCost(Skill skill) {
 		int highSkills = countHighSkills();
 		int dwarfLevel = getDwarfLevel();
 		int quartileSize = Math.min(4, highSkills / 4);
 		int quartileNumber = 1; // 1 = top, 2 = 2nd, etc.
 		int[] levelList = new int[highSkills + 1];
-		List<ItemStack> trainingStack = new ArrayList<ItemStack>();
+		List<ItemStack> costToLevelStack = new ArrayList<ItemStack>();
+		List<ItemStack> totalCostStack = new ArrayList<ItemStack>();
 		int i = 0;
 
 		// Creates an ordered list of skill levels and finds where in that list
@@ -65,19 +66,26 @@ public class DCPlayer {
 			multiplier *= (1 + 3 * dwarfLevel / (100 + 3 * dwarfLevel));
 
 		// create output item stack of new items
+		int item1Amount = ((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item1.Base * multiplier - .01), skill.Item1.Max)), 
+		    item2Amount = ((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item2.Base * multiplier - .01), skill.Item2.Max)), 
+		    item3Amount = ((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item3.Base * multiplier - .01), skill.Item3.Max));	
 		
-		trainingStack.add(new ItemStack(skill.Item1.Item, 
-				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item1.Base * multiplier - .01), skill.Item1.Max)) - skill.getDeposit1()));
+		totalCostStack.add(new ItemStack(skill.Item1.Item, item1Amount));
+		costToLevelStack.add(new ItemStack(skill.Item1.Item, item1Amount - skill.getDeposit1()));
+		
 		
 		if (skill.Item2.Item != Material.AIR){
-			trainingStack.add(new ItemStack(skill.Item2.Item,
-				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item2.Base * multiplier - .01), skill.Item2.Max)) - skill.getDeposit2()));
+			totalCostStack.add(new ItemStack(skill.Item2.Item, item2Amount));
+			costToLevelStack.add(new ItemStack(skill.Item2.Item, item2Amount - skill.getDeposit2()));
 		}
 		if (skill.Item3.Item != Material.AIR){
-			trainingStack.add(new ItemStack(skill.Item3.Item, 
-				((int) Math.min(Math.ceil((skill.getLevel() + 1) * skill.Item3.Base * multiplier - .01), skill.Item3.Max)) - skill.getDeposit3()));
+			totalCostStack.add(new ItemStack(skill.Item3.Item, item3Amount));
+			costToLevelStack.add(new ItemStack(skill.Item3.Item, item3Amount - skill.getDeposit3()));
 		}
-		return trainingStack;
+		List<List<ItemStack>> costs = new ArrayList<List<ItemStack>>();
+		costs.add(costToLevelStack);
+		costs.add(totalCostStack);
+		return costs;
 	}
 
 	/**

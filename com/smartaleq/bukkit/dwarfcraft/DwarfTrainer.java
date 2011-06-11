@@ -148,7 +148,9 @@ public final class DwarfTrainer {
 			return;
 		}
 		
-		List<ItemStack> trainingCosts = dCPlayer.calculateTrainingCost(skill);
+		List<List<ItemStack>> costs = dCPlayer.calculateTrainingCost(skill);
+		List<ItemStack> trainingCostsToLevel = costs.get(0);
+		//List<ItemStack> totalCostsToLevel = costs.get(1);
 
 		if (skill.getLevel() >= 30) {
 			plugin.getOut().sendMessage(player, "&cYour skill is max level (30)!", tag);
@@ -162,7 +164,7 @@ public final class DwarfTrainer {
 
 		boolean hasMats = true;
 		boolean deposited = false;
-		for (ItemStack costStack : trainingCosts) {
+		for (ItemStack costStack : trainingCostsToLevel) {
 			if (costStack == null) {
 				continue;
 			}

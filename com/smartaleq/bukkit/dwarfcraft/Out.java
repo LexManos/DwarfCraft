@@ -244,10 +244,18 @@ public class Out {
 		}
 		
 		sendMessage(sender, String.format("&6---Train costs for level &3%d", (skill.getLevel() + 1)));		
-		List<ItemStack> costs = dCPlayer.calculateTrainingCost(skill);
-		for (ItemStack item : costs) {
-			if (item != null)
-				sendMessage(sender, String.format(" &2%d %s&6  --", item.getAmount(), item.getType()), " &6-- ");
+		List<List<ItemStack>> costsTurnins = dCPlayer.calculateTrainingCost(skill); 
+		List<ItemStack> remaining = costsTurnins.get(0);
+		List<ItemStack> total = costsTurnins.get(1);
+		for(int i = 0; i < remaining.size(); i++) {
+			ItemStack r = remaining.get(i);
+			ItemStack t = total.get(i);
+			if(r != null && t != null) {
+				int totalCost = t.getAmount();
+				int deposited = t.getAmount() - r.getAmount();
+				sendMessage(sender, String.format(" &2%d of %d %s&6  --", deposited, totalCost, r.getType()), " &6-- ");				
+			}
+			
 		}
 		return true;
 	}

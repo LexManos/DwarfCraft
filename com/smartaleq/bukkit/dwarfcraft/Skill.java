@@ -14,7 +14,7 @@ public class Skill implements Cloneable {
 	public final TrainingItem  Item1;
 	public final TrainingItem  Item2;
 	public final TrainingItem  Item3;
-	private int				   deposit1;
+	private int 			   deposit1;
 	private int                deposit2;
 	private int                deposit3;
 

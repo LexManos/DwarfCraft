@@ -2,11 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/bukkit-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/craftbukkit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/sqlite.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/Towny.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/Permissions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Lex/Desktop/BukkitPlugins/libs/BukkitContrib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Raymond/Desktop/bukkit/craftbukkit-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="E:/JavaProjects/DwarfCraft/lib/Towny.jar"/>
+	<classpathentry kind="lib" path="E:/JavaProjects/DwarfCraft/lib/Permissions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
